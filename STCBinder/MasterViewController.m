@@ -58,6 +58,15 @@
             [strongself.alert show];
         }
     }];
+    
+    [self.tableViewModel bindProperty:STCGetPropertyName(selectedCell) withReactBlock:^(id value, id viewModel) {
+        __strong typeof(weakself) strongself = weakself;
+        MasterTableViewCell *cell = (MasterTableViewCell *)value;
+        CellModel *model = cell.model;
+        [weakself.tableViewModel updateProperty:STCGetPropertyName(currentModel) withValue:model];
+        weakself.alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"click button, name: %@, index: %@, image: %@", model.name, model.indexName, model.imageName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [weakself.alert show];
+    }];
 }
 
 - (void)tableDataSourcesReactWithValue:(id)value viewModel:(id)viewModel
@@ -132,23 +141,6 @@
         _tableViewModel = [[MasterViewModel alloc] initWithDelegate:self];
     }
     return _tableViewModel;
-}
-
-- (void)reactActionWithViewModel:(id)viewModel target:(id)target
-{
-    if ([target isKindOfClass:[UIButton class]]) {
-        id view = [(UIButton *)target superview];
-        while (![view isKindOfClass:[UITableViewCell class]] && view != nil) {
-            view = [view superview];
-        }
-        if (view) {
-            MasterTableViewCell *cell = (MasterTableViewCell *)view;
-            CellModel *model = cell.model;
-            [self.tableViewModel updateProperty:STCGetPropertyName(currentModel) withValue:model];
-            self.alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"click button, name: %@, index: %@, image: %@", model.name, model.indexName, model.imageName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [self.alert show];
-        }
-    }
 }
 
 - (void)updateValue:(id)value withViewModel:(id)viewModel target:(id)target

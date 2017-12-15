@@ -8,6 +8,7 @@
 
 #import "MasterViewModel.h"
 #import "CellModel.h"
+#import <UIKit/UIKit.h>
 
 @interface MasterViewModel ()
 
@@ -15,6 +16,7 @@
 @property (nonatomic, strong, readwrite) NSString *headerName;
 @property (nonatomic, strong, readwrite) CellModel *currentModel;
 @property (nonatomic, assign, readwrite) BOOL uploading;
+@property (nonatomic, assign, readwrite) id selectedCell;
 
 @property (nonatomic, assign, readwrite) SEL clickAction;
 @property (nonatomic, assign, readwrite) SEL uploadAction;
@@ -42,7 +44,13 @@
 
 - (void)clickWithTarget:(id)target
 {
-    [self reactActionWithTarget:target];
+    id view = [(UIButton *)target superview];
+    while (![view isKindOfClass:[UITableViewCell class]] && view != nil) {
+        view = [view superview];
+    }
+    if (view) {
+        self.selectedCell = view;
+    }
 }
 
 - (void)uploadWithTarget:(id)target

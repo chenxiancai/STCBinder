@@ -21,14 +21,6 @@
  */
 - (void)updateValue:(id)value withViewModel:(id)viewModel target:(id)target;
 
-/**
- react action
- 
- @param viewModel viewModel
- @param target target
- */
-- (void)reactActionWithViewModel:(id)viewModel target:(id)target;
-
 @end
 
 #endif /* STCViewModelProtocol_h */

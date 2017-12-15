@@ -15,6 +15,7 @@
 @property (nonatomic, strong, readonly) NSString *headerName;
 @property (nonatomic, strong, readonly) CellModel *currentModel;
 @property (nonatomic, assign, readonly) BOOL uploading;
+@property (nonatomic, assign, readonly) id selectedCell;
 
 @property (nonatomic, assign, readonly) SEL clickAction;
 @property (nonatomic, assign, readonly) SEL uploadAction;

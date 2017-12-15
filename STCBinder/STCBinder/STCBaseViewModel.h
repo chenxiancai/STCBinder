@@ -90,14 +90,6 @@ typedef void(^reactBlock)(id value, id viewModel);
 - (void)unbindProperty:(NSString *)propertyName withReactBlock:(reactBlock)block;
 
 /**
- react action with target, to feek back of synchron or asynchronous action
- 对同步或者异步动作进行响应
- 
- @param target action target
- */
-- (void)reactActionWithTarget:(id)target;
-
-/**
  update viewModel property without react action
  更新viewModel属性，但不进行响应操作
  

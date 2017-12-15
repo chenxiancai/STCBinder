@@ -134,15 +134,6 @@
     }
 }
 
-- (void)reactActionWithTarget:(id)target
-{
-    [self enumerateDelegatesUsingBlock:^(id<STCViewModelProtocol> delegate) {
-        if ([delegate respondsToSelector:@selector(reactActionWithViewModel:target:)]) {
-            [delegate reactActionWithViewModel:self target:target];
-        }
-    }];
-}
-
 - (void)updateProperty:(id)propertyName withValue:(id)value
 {
     if (![self respondsToSelector:NSSelectorFromString(propertyName)]) {
