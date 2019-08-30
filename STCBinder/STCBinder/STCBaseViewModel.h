@@ -26,6 +26,7 @@ typedef void(^reactBlock)(id value, id viewModel);
 
 @interface STCBaseViewModel : NSObject
 
+
 /**
  viewModel initialization
  viewModel 初始化
@@ -36,6 +37,8 @@ typedef void(^reactBlock)(id value, id viewModel);
 - (instancetype)initWithDelegate:(id<STCViewModelProtocol>)delegate;
 
 - (instancetype)init NS_UNAVAILABLE;
+
+- (SEL)selectorBlock:(void (^)(id arg))block;
 
 /**
  register ViewModel delegate

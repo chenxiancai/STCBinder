@@ -12,19 +12,6 @@
 
 @interface MasterViewModel ()
 
-@property (nonatomic, strong, readwrite) NSArray <CellModel *> *tableDataSources;
-@property (nonatomic, strong, readwrite) NSString *headerName;
-@property (nonatomic, strong, readwrite) CellModel *currentModel;
-@property (nonatomic, assign, readwrite) BOOL uploading;
-@property (nonatomic, assign, readwrite) id selectedCell;
-
-@property (nonatomic, assign, readwrite) SEL clickAction;
-@property (nonatomic, assign, readwrite) SEL uploadAction;
-
-@property (nonatomic, assign, readwrite) SEL updateDataSources;
-@property (nonatomic, assign, readwrite) SEL updateTotalCount;
-@property (nonatomic, assign, readwrite) SEL updateIndexs;
-
 @end
 
 @implementation MasterViewModel
@@ -33,35 +20,11 @@
 {
     self = [super initWithDelegate:delegate];
     if (self) {
-        self.clickAction = @selector(clickWithTarget:);
-        self.uploadAction = @selector(uploadWithTarget:);
-        self.updateDataSources = @selector(updateDataSourcesAction);
-        self.updateTotalCount = @selector(updateTotalCountAction);
-        self.updateIndexs = @selector(updateIndexsAction);
     }
     return self;
 }
 
-- (void)clickWithTarget:(id)target
-{
-    id view = [(UIButton *)target superview];
-    while (![view isKindOfClass:[UITableViewCell class]] && view != nil) {
-        view = [view superview];
-    }
-    if (view) {
-        self.selectedCell = view;
-    }
-}
-
-- (void)uploadWithTarget:(id)target
-{
-    self.uploading = YES;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.uploading = NO;
-    });
-}
-
-- (void)updateDataSourcesAction
+- (void)fetchDataSources
 {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
     NSArray *imagePaths = @[@"icon_worrng",
@@ -92,12 +55,7 @@
     return [NSArray arrayWithArray:dataSource];
 }
 
-- (void)updateTotalCountAction
-{
-    self.headerName = [NSString stringWithFormat:@"total count :%@", @(self.tableDataSources.count)];
-}
-
-- (void)updateIndexsAction
+- (void)updateIndexs
 {
     self.tableDataSources = [self updateIndexWithDataSource:[NSArray arrayWithArray:self.tableDataSources]];
 }
