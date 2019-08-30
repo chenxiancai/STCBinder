@@ -14,7 +14,7 @@
 @property (nonatomic, strong) NSArray <CellModel *> *tableDataSources;
 @property (nonatomic, strong) NSString *headerName;
 @property (nonatomic, assign) BOOL uploading;
-@property (nonatomic, assign) id selectedCell;
+@property (nonatomic, assign) NSInteger selectedRow;
 
 - (void)fetchDataSources;
 - (void)updateIndexs;
