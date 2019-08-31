@@ -63,7 +63,6 @@
         
         if ([self isKindOfClass:[DetailViewController class]] && self.tableViewModel.uploading) {
             [self.navigationController popViewControllerAnimated:YES];
-            [self.tableViewModel removeAllBlocks];
         } else {
             [self.tableViewModel fetchDataSources];
             if (self.alert) {
@@ -80,6 +79,14 @@
     
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     [self viewModelInitialize];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    if (![self.navigationController.viewControllers containsObject:self]) {
+        [self.tableViewModel removeAllBlocks];
+    }
 }
 
 -(void)viewModelInitialize
