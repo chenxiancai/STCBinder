@@ -7,6 +7,8 @@
 //
 
 #import "STCProxy.h"
+#import <objc/runtime.h>
+
 
 @interface STCProxy ()
 
@@ -15,6 +17,7 @@
 @end
 
 @implementation STCProxy
+
 
 - (instancetype)initWithTarget:(id)target {
     _target = target;

@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STCViewModelProtocol.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, STCViewModelProtocol>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

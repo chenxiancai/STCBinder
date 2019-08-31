@@ -23,4 +23,8 @@
  */
 + (instancetype)proxyWithTarget:(id)target;
 
+
+- (SEL)selectorBlock:(void (^)(id arg))block;
+
+
 @end

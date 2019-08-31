@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "STCViewModelProtocol.h"
 #import "MasterViewModel.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate>

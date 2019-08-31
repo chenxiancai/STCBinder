@@ -13,7 +13,7 @@
 
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
-@interface MasterViewController ()<STCViewModelProtocol, UIAlertViewDelegate>
+@interface MasterViewController ()
 
 @property (nonatomic, strong) MasterViewModel *tableViewModel;
 @property (nonatomic, strong) UIAlertController *alert;
@@ -35,34 +35,46 @@
     [self.tableView registerClass:[MasterTableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
     self.tableView.tableHeaderView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
     
-    __weak typeof(self) weakself = self;
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Fetch"
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"upload"
                                                                         style:UIBarButtonItemStylePlain
                                                                        target:self.tableViewModel
                                                                        action:[self.tableViewModel selectorBlock:^(id arg) {
         
-        NSLog(@"%@", arg);
-        __strong typeof(weakself) strongself = weakself;
-        strongself.tableViewModel.uploading = !strongself.tableViewModel.uploading;
-        if (strongself.tableViewModel.uploading) {
-            [strongself.navigationItem.rightBarButtonItem setTitle:@"Push"];
-            if ([strongself isKindOfClass:[DetailViewController class]]){
-                [strongself.navigationItem.leftBarButtonItem setTitle:@"Pop"];
+        self.tableViewModel.uploading = !self.tableViewModel.uploading;
+        if (self.tableViewModel.uploading) {
+            [self.navigationItem.rightBarButtonItem setTitle:@"Push"];
+            if ([self isKindOfClass:[DetailViewController class]]){
+                [self.navigationItem.leftBarButtonItem setTitle:@"Pop"];
+            }
+        } else {
+            [self.navigationItem.rightBarButtonItem setTitle:@"upload"];
+            if ([self isKindOfClass:[DetailViewController class]]){
+                [self.navigationItem.leftBarButtonItem setTitle:@"fetch"];
             }
         }
+        
     }]];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
-    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Addcell"
+    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"fetch"
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self.tableViewModel
                                                                       action:[self.tableViewModel selectorBlock:^(id arg) {
         
-        __strong typeof(weakself) strongself = weakself;
-        if ([strongself isKindOfClass:[DetailViewController class]] && strongself.tableViewModel.uploading) {
-            [strongself.navigationController popViewControllerAnimated:YES];
+        if ([self isKindOfClass:[DetailViewController class]] && self.tableViewModel.uploading) {
+            [self.navigationController popViewControllerAnimated:YES];
+            [self.tableViewModel removeAllBlocks];
         } else {
-            [strongself.tableViewModel fetchDataSources];
+            [self.tableViewModel fetchDataSources];
+            if (self.alert) {
+                [self.alert dismissViewControllerAnimated:NO completion:nil];
+            }
+            self.alert = [UIAlertController alertControllerWithTitle:nil message:@"asynchronous fetching..." preferredStyle:UIAlertControllerStyleAlert];
+            [self presentViewController:self.alert animated:YES completion:^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.alert dismissViewControllerAnimated:YES completion:nil];
+                });
+            }];
         }
     }]];
     
@@ -73,50 +85,45 @@
 -(void)viewModelInitialize
 {
     
-    __weak typeof(self) weakself = self;
     [self.tableViewModel bindProperty:STCGetPropertyName(headerName) withReactBlock:^(id value, id viewModel) {
-        __strong typeof(weakself) strongself = weakself;
-        UILabel *label = (UILabel *)strongself.tableView.tableHeaderView;
+        UILabel *label = (UILabel *)self.tableView.tableHeaderView;
         label.text = value;
-        [strongself.tableView reloadData];
+        [self.tableView reloadData];
     }];
     
     [self.tableViewModel bindProperty:STCGetPropertyName(uploading) withReactBlock:^(id value, id viewModel) {
-        __strong typeof(weakself) strongself = weakself;
-        if (strongself.tableViewModel.uploading) {
-            if (strongself.alert) {
-                [strongself.alert dismissViewControllerAnimated:NO completion:nil];
+        if (self.tableViewModel.uploading) {
+            if (self.alert) {
+                [self.alert dismissViewControllerAnimated:NO completion:nil];
             }
-            strongself.alert = [UIAlertController alertControllerWithTitle:nil message:@"asynchronous fetching..." preferredStyle:UIAlertControllerStyleAlert];
-            [strongself presentViewController:strongself.alert animated:YES completion:^{
+            self.alert = [UIAlertController alertControllerWithTitle:nil message:@"asynchronous uploading..." preferredStyle:UIAlertControllerStyleAlert];
+            [self presentViewController:self.alert animated:YES completion:^{
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [strongself.alert dismissViewControllerAnimated:YES completion:nil];
+                    [self.alert dismissViewControllerAnimated:YES completion:nil];
                 });
             }];
         } else {
             DetailViewController *vc = [[DetailViewController alloc] init];
-            [strongself.navigationController pushViewController:vc animated:YES];
+            [self.navigationController pushViewController:vc animated:YES];
         }
         
     }];
     
     [self.tableViewModel bindProperty:STCGetPropertyName(selectedRow) withReactBlock:^(id value, id viewModel) {
-        __strong typeof(weakself) strongself = weakself;
-        if (strongself.alert) {
-            [strongself.alert dismissViewControllerAnimated:NO completion:nil];
+        if (self.alert) {
+            [self.alert dismissViewControllerAnimated:NO completion:nil];
         }
-        strongself.alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"click button, index: %@", value] preferredStyle:UIAlertControllerStyleAlert];
-        [strongself presentViewController:strongself.alert animated:YES completion:^{
+        self.alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"click button, index: %@", value] preferredStyle:UIAlertControllerStyleAlert];
+        [self presentViewController:self.alert animated:YES completion:^{
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [strongself.alert dismissViewControllerAnimated:YES completion:nil];
+                    [self.alert dismissViewControllerAnimated:YES completion:nil];
             });
         }];
     }];
     
     [self.tableViewModel bindProperty:STCGetPropertyName(tableDataSources) withReactBlock:^(id value, id viewModel) {
-        __strong typeof(weakself) strongself = weakself;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [strongself.tableView reloadData];
+            [self.tableView reloadData];
         });
     }];
 }
@@ -135,13 +142,11 @@
         cell = [[MasterTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"reuseIdentifier"];
     }
     cell.model = self.tableViewModel.tableDataSources[indexPath.row];
-    __weak typeof(self) weakself = self;
     
     [cell.button addTarget:self.tableViewModel action:[self.tableViewModel selectorBlock:^(id arg) {
-        __strong typeof(weakself) strongself = weakself;
         NSLog(@"%@", arg);
         UIButton * button = (UIButton *)arg;
-        strongself.tableViewModel.selectedRow = button.tag;
+        self.tableViewModel.selectedRow = button.tag;
     }] forControlEvents:UIControlEventTouchUpInside];
     cell.button.tag = indexPath.row;
     return cell;
@@ -201,7 +206,7 @@
 - (MasterViewModel *)tableViewModel
 {
     if (!_tableViewModel) {
-        _tableViewModel = [[MasterViewModel alloc] initWithDelegate:self];
+        _tableViewModel = [[MasterViewModel alloc] init];
     }
     return _tableViewModel;
 }

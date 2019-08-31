@@ -39,7 +39,6 @@
 		4F8C09A5B785BD6BB2E41E69 /* Pods-STCBinder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STCBinder.release.xcconfig"; path = "Pods/Target Support Files/Pods-STCBinder/Pods-STCBinder.release.xcconfig"; sourceTree = "<group>"; };
 		5F2049AD1F7752D90062F376 /* STCBaseViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STCBaseViewModel.h; sourceTree = "<group>"; };
 		5F2049AE1F7752D90062F376 /* STCBaseViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STCBaseViewModel.m; sourceTree = "<group>"; };
-		5F2049B01F7753060062F376 /* STCViewModelProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STCViewModelProtocol.h; sourceTree = "<group>"; };
 		5F2049B11F77534D0062F376 /* STCProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STCProxy.h; sourceTree = "<group>"; };
 		5F2049B21F77534D0062F376 /* STCProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STCProxy.m; sourceTree = "<group>"; };
 		5F2049B41F7771060062F376 /* MasterViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewModel.h; sourceTree = "<group>"; };
@@ -177,7 +176,6 @@
 			children = (
 				5F2049AD1F7752D90062F376 /* STCBaseViewModel.h */,
 				5F2049AE1F7752D90062F376 /* STCBaseViewModel.m */,
-				5F2049B01F7753060062F376 /* STCViewModelProtocol.h */,
 				5F2049B11F77534D0062F376 /* STCProxy.h */,
 				5F2049B21F77534D0062F376 /* STCProxy.m */,
 			);
