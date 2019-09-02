@@ -73,4 +73,12 @@
     self.tableDataSources = [self updateIndexWithDataSource:[NSArray arrayWithArray:self.tableDataSources]];
 }
 
+- (void)removeWithIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableArray *dataSources = [NSMutableArray arrayWithArray:self.tableDataSources];
+    [dataSources removeObjectAtIndex:indexPath.row];
+    self.tableDataSources = [NSArray arrayWithArray:dataSources];
+    self.headerName = [NSString stringWithFormat:@"total count :%@", @(self.tableDataSources.count)];
+}
+
 @end

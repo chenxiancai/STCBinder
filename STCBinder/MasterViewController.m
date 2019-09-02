@@ -38,7 +38,7 @@
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"upload"
                                                                         style:UIBarButtonItemStylePlain
                                                                        target:self.tableViewModel
-                                                                       action:[self.tableViewModel selectorBlock:^(id arg) {
+                                                                       action:[self.tableViewModel reactBlock:^(id arg) {
         
         self.tableViewModel.uploading = !self.tableViewModel.uploading;
         if (self.tableViewModel.uploading) {
@@ -59,7 +59,7 @@
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"fetch"
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self.tableViewModel
-                                                                      action:[self.tableViewModel selectorBlock:^(id arg) {
+                                                                      action:[self.tableViewModel reactBlock:^(id arg) {
         
         if ([self isKindOfClass:[DetailViewController class]] && self.tableViewModel.uploading) {
             [self.navigationController popViewControllerAnimated:YES];
@@ -85,7 +85,7 @@
 {
     [super viewDidDisappear:animated];
     if (![self.navigationController.viewControllers containsObject:self]) {
-        [self.tableViewModel removeAllBlocks];
+        [self.tableViewModel disposeAllReactBlocks];
     }
 }
 
@@ -149,8 +149,7 @@
         cell = [[MasterTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"reuseIdentifier"];
     }
     cell.model = self.tableViewModel.tableDataSources[indexPath.row];
-    
-    [cell.button addTarget:self.tableViewModel action:[self.tableViewModel selectorBlock:^(id arg) {
+    [cell.button addTarget:self.tableViewModel action:[self.tableViewModel reactBlock:^(id arg) {
         NSLog(@"%@", arg);
         UIButton * button = (UIButton *)arg;
         self.tableViewModel.selectedRow = button.tag;
@@ -184,11 +183,8 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
         
-        NSMutableArray *dataSources = [NSMutableArray arrayWithArray:self.tableViewModel.tableDataSources];
-        [dataSources removeObjectAtIndex:indexPath.row];
-        self.tableViewModel.tableDataSources = [NSArray arrayWithArray:dataSources];
+        [self.tableViewModel removeWithIndexPath:indexPath];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        self.tableViewModel.headerName = [NSString stringWithFormat:@"total count :%@", @(self.tableViewModel.tableDataSources.count)];
         
         if (self.alert) {
             [self.alert dismissViewControllerAnimated:NO completion:nil];

@@ -18,5 +18,6 @@
 
 - (void)fetchDataSources;
 - (void)updateIndexs;
+- (void)removeWithIndexPath:(NSIndexPath *)indexPath;
 
 @end

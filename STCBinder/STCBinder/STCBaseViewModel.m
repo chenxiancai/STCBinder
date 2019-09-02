@@ -31,7 +31,7 @@
     NSLog(@"STCBaseViewModel dealloc");
 }
 
-- (void)removeAllBlocks
+- (void)disposeAllReactBlocks
 {
     for (NSString *selName in _selNames) {
         SEL sel = NSSelectorFromString(selName);
@@ -41,13 +41,25 @@
     self.binderReactBlockDict = nil;
 }
 
-- (SEL)selectorBlock:(void (^)(id arg))block {
+- (SEL)reactBlock:(void (^)(id arg))block {
     NSString *selName = [NSString stringWithFormat:@"selector_%p:", block];
     [self.selNames addObject:selName];
     SEL sel = NSSelectorFromString(selName);
     class_addMethod([self class], sel, (IMP)selectorImp, "v@:@");
     objc_setAssociatedObject(self, sel, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     return sel;
+}
+
+- (STCBaseViewModel *)errorBlock:(void (^)(id arg))block
+{
+    [self reactBlock:block];
+    return self;
+}
+
+- (STCBaseViewModel *)completedBlock:(void (^)(id arg))block
+{
+    [self reactBlock:block];
+    return self;
 }
 
 static void selectorImp(id self, SEL _cmd, id arg) {
