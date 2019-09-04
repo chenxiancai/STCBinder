@@ -96,6 +96,11 @@
         UILabel *label = (UILabel *)self.tableView.tableHeaderView;
         label.text = value;
         [self.tableView reloadData];
+        NSLog(@"react block 1!");
+    }];
+    
+    [self.tableViewModel bindProperty:STCGetPropertyName(headerName) withReactBlock:^(id value, id viewModel) {
+        NSLog(@"react block 2!");
     }];
     
     [self.tableViewModel bindProperty:STCGetPropertyName(uploading) withReactBlock:^(id value, id viewModel) {

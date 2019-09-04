@@ -25,7 +25,7 @@ typedef void(^ReactBlock)(id value, id viewModel);
  @param propertyName propertyName of viewModel
  @param block block
  */
-- (void)bindProperty:(nonnull NSString *)propertyName
+- (STCBaseViewModel *)bindProperty:(nonnull NSString *)propertyName
       withReactBlock:(nonnull ReactBlock)block;
 
 /**
@@ -35,7 +35,7 @@ typedef void(^ReactBlock)(id value, id viewModel);
  @param propertyName propertyName of viewModel
  @param block  block
  */
-- (void)unbindProperty:(nonnull NSString *)propertyName
+- (STCBaseViewModel *)unbindProperty:(nonnull NSString *)propertyName
         withReactBlock:(nonnull ReactBlock)block;
 
 /**

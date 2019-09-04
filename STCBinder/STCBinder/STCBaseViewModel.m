@@ -80,7 +80,7 @@ static void selectorImp(id self, SEL _cmd, id arg) {
 
 #pragma mark - binder methods
 
-- (void)bindProperty:(NSString *)propertyName withReactBlock:(ReactBlock)block
+- (STCBaseViewModel *)bindProperty:(NSString *)propertyName withReactBlock:(ReactBlock)block
 {
     if (propertyName && block) {
         if ([self.binderReactBlockDict objectForKey:propertyName]) {
@@ -93,10 +93,11 @@ static void selectorImp(id self, SEL _cmd, id arg) {
             [self addObserver:self forKeyPath:propertyName options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
         }
     }
+    return self;
 }
 
 
-- (void)unbindProperty:(NSString *)propertyName withReactBlock:(ReactBlock)block
+- (STCBaseViewModel *)unbindProperty:(NSString *)propertyName withReactBlock:(ReactBlock)block
 {
     if (propertyName && block) {
         if ([self.binderReactBlockDict objectForKey:propertyName]) {
@@ -120,6 +121,8 @@ static void selectorImp(id self, SEL _cmd, id arg) {
             }
         }
     }
+    
+    return self;
 }
 
 #pragma mark - KVO
