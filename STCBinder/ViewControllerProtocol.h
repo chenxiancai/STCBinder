@@ -19,43 +19,43 @@
 
 - (id)idMethod;
 
-- (NSString *)nsstringMethod;
+//- (NSString *)nsstringMethod;
+//
+//- (BOOL)boolMethod;
+//
+//- (Class)classMethod;
+//
+//- (SEL)selMethod;
 
-- (BOOL)boolMethod;
-
-- (Class)classMethod;
-
-- (SEL)selMethod;
-
-- (char)charMethod;
-
-- (unsigned char)unsignedCharMethod;
-
-- (short)shortMethod;
-
-- (unsigned short)unsignedShortMethod;
-
-- (int)intMethod;
-
-- (unsigned int)unsignedIntMethod;
-
-- (long)longMethod;
-
-- (unsigned long)unsignedLongMethod;
-
-- (long long)longlongMethod;
-
-- (unsigned long long)unsignedlonglongMethod;
-
-- (float)floatMethod;
-
-- (double)doubleMethod;
-
-- (char *)charPointMethod;
-
-- (void *)pointMethod;
-
-- (CGSize)structMethod;
+//- (char)charMethod;
+//
+//- (unsigned char)unsignedCharMethod;
+//
+//- (short)shortMethod;
+//
+//- (unsigned short)unsignedShortMethod;
+//
+//- (int)intMethod;
+//
+//- (unsigned int)unsignedIntMethod;
+//
+//- (long)longMethod;
+//
+//- (unsigned long)unsignedLongMethod;
+//
+//- (long long)longlongMethod;
+//
+//- (unsigned long long)unsignedlonglongMethod;
+//
+//- (float)floatMethod;
+//
+//- (double)doubleMethod;
+//
+//- (char *)charPointMethod;
+//
+//- (void *)pointMethod;
+//
+//- (CGSize)structMethod;
 
 
 @end

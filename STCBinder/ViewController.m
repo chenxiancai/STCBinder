@@ -27,10 +27,14 @@
     
     self.textView =  [[UITextView alloc] initWithFrame:CGRectMake(100, 100, 100, 80)];
     self.textView.backgroundColor = [UIColor greenColor];
-    self.textView.delegate =  (id <UITextViewDelegate>) [self.viewModel bindProtocol:STCGetProtocolName(UITextViewDelegate) withReactBlock:(id)^(id arg,NSString *selName) {
+
+    self.textView.delegate =  (id <UITextViewDelegate>) [self.viewModel bindProtocol:STCGetProtocolName(UITextViewDelegate) withReactBlock:^id(id arg,NSString *selName) {
         NSLog(@"%@", arg);
         NSLog(@"%@", selName);
-        return YES;
+
+        [self.aVC test];
+
+        return [NSNumber numberWithBool:YES];
     }];
 
     [self.view addSubview:self.textView];
@@ -45,7 +49,7 @@
     
     self.aVC = [[NewViewController alloc] init];
     self.aVC.delegate = (id <viewControllerProtocol>)[self.viewModel bindProtocol:STCGetProtocolName(viewControllerProtocol) withReactBlock:^id(id arg, NSString *selName) {
-        
+
         if ([selName isEqualToString:STCGetSeletorName(voidMethod)]) {
             return nil;
         }
@@ -58,30 +62,29 @@
             return self;
         }
         
-        if ([selName isEqualToString:STCGetSeletorName(nsstringMethod)]) {
-            return @"NSString";
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(boolMethod)]) {
-            return [NSNumber numberWithBool:YES];
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(classMethod)]) {
-            return [self class];
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(selMethod)]) {
-            return NSStringFromSelector(@selector(viewDidLoad));
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(charMethod)]) {
-            char value = 0x90;
-            return [NSNumber numberWithChar:value];
-        }
-        
+//        if ([selName isEqualToString:STCGetSeletorName(nsstringMethod)]) {
+//            return @"NSString";
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(boolMethod)]) {
+//            return [NSNumber numberWithBool:YES];
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(classMethod)]) {
+//            return [self class];
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(selMethod)]) {
+//            return NSStringFromSelector(@selector(viewDidLoad));
+//        }
+//        
+//        if ([selName isEqualToString:STCGetSeletorName(charMethod)]) {
+//            char value = 0x90;
+//            return [NSNumber numberWithChar:value];
+//        }
+//
         return nil;
     }];
-
 }
 
 //

@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void(^ReactBlock)(id value, id viewModel);
-typedef void(^ProtocolBlock)(SEL selector, id viewModel);
+typedef id (^ProtocolBlock)(id arg,NSString *selName);
 
 #define STCGetSeletorName(value) STCGetPropertyName(value)
 #define STCGetPropertyName(value) NSStringFromSelector(@selector(value))
@@ -19,7 +21,7 @@ typedef void(^ProtocolBlock)(SEL selector, id viewModel);
 
 - (instancetype)init;
 
-- (SEL)reactBlock:(nonnull void (^)(id arg))block;
+- (SEL)reactBlock:(void (^)(id arg))block;
 
 /**
  bind viewModel property with block
@@ -28,8 +30,8 @@ typedef void(^ProtocolBlock)(SEL selector, id viewModel);
  @param propertyName propertyName of viewModel
  @param block block
  */
-- (STCBaseViewModel *)bindProperty:(nonnull NSString *)propertyName
-      withReactBlock:(nonnull ReactBlock)block;
+- (STCBaseViewModel *)bindProperty:(NSString *)propertyName
+      withReactBlock:(ReactBlock)block;
 
 /**
  unbind viewModel property with block
@@ -38,20 +40,23 @@ typedef void(^ProtocolBlock)(SEL selector, id viewModel);
  @param propertyName propertyName of viewModel
  @param block  block
  */
-- (STCBaseViewModel *)unbindProperty:(nonnull NSString *)propertyName
-        withReactBlock:(nonnull ReactBlock)block;
+- (STCBaseViewModel *)unbindProperty:(NSString *)propertyName
+        withReactBlock:(ReactBlock)block;
 
 /**
  删除绑定的block
  */
 - (void)disposeAllReactBlocks;
 
-- (STCBaseViewModel *)bindProtocol:(nonnull NSString *)protocol
-                    withReactBlock:(nonnull id (^)(id arg,NSString *selName))block;
+- (STCBaseViewModel *)bindProtocol:(NSString *)protocol
+                    withReactBlock:(ProtocolBlock)block;
 
-- (STCBaseViewModel *)bindProtocolMethod:(nonnull NSString *)method
-                          withReactBlock:(nonnull id (^)(id arg,NSString *selName))block;
+- (STCBaseViewModel *)updateCurrentProtocol:(NSString *)protocol;
 
+- (STCBaseViewModel *)bindProtocolMethod:(NSString *)method
+                          withReactBlock:(ProtocolBlock)block;
 
 
 @end
+
+NS_ASSUME_NONNULL_END
