@@ -9,8 +9,11 @@
 #import <Foundation/Foundation.h>
 
 typedef void(^ReactBlock)(id value, id viewModel);
+typedef void(^ProtocolBlock)(SEL selector, id viewModel);
 
-#define STCGetPropertyName(property) NSStringFromSelector(@selector(property))
+#define STCGetSeletorName(value) STCGetPropertyName(value)
+#define STCGetPropertyName(value) NSStringFromSelector(@selector(value))
+#define STCGetProtocolName(value) NSStringFromProtocol(@protocol(value))
 
 @interface STCBaseViewModel : NSObject
 
@@ -42,6 +45,12 @@ typedef void(^ReactBlock)(id value, id viewModel);
  删除绑定的block
  */
 - (void)disposeAllReactBlocks;
+
+- (STCBaseViewModel *)bindProtocol:(nonnull NSString *)protocol
+                    withReactBlock:(nonnull id (^)(id arg,NSString *selName))block;
+
+- (STCBaseViewModel *)bindProtocolMethod:(nonnull NSString *)method
+                          withReactBlock:(nonnull id (^)(id arg,NSString *selName))block;
 
 
 

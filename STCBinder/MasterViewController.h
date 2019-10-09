@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MasterViewModel.h"
 
 @interface MasterViewController : UITableViewController
+
+@property (nonatomic, strong) MasterViewModel *tableViewModel;
+
 
 @end
 

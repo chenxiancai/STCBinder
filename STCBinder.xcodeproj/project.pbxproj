@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F0A18052326CD7C004C3B8F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F0A18042326CD7C004C3B8F /* ViewController.m */; };
+		5F0A18082326CDDE004C3B8F /* ViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F0A18072326CDDE004C3B8F /* ViewModel.m */; };
+		5F10E9B8234B8866005AEC27 /* NewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F10E9B7234B8866005AEC27 /* NewViewController.m */; };
 		5F2049AF1F7752D90062F376 /* STCBaseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049AE1F7752D90062F376 /* STCBaseViewModel.m */; };
 		5F2049B31F77534D0062F376 /* STCProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049B21F77534D0062F376 /* STCProxy.m */; };
 		5F2049B61F7771060062F376 /* MasterViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049B51F7771060062F376 /* MasterViewModel.m */; };
@@ -37,6 +40,13 @@
 /* Begin PBXFileReference section */
 		19016DE3B7DBC39A2F08A2E5 /* Pods-STCBinder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STCBinder.debug.xcconfig"; path = "Pods/Target Support Files/Pods-STCBinder/Pods-STCBinder.debug.xcconfig"; sourceTree = "<group>"; };
 		4F8C09A5B785BD6BB2E41E69 /* Pods-STCBinder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-STCBinder.release.xcconfig"; path = "Pods/Target Support Files/Pods-STCBinder/Pods-STCBinder.release.xcconfig"; sourceTree = "<group>"; };
+		5F0A18032326CD7C004C3B8F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		5F0A18042326CD7C004C3B8F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		5F0A18062326CDDE004C3B8F /* ViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewModel.h; sourceTree = "<group>"; };
+		5F0A18072326CDDE004C3B8F /* ViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewModel.m; sourceTree = "<group>"; };
+		5F10E9B5234B5FAA005AEC27 /* ViewControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewControllerProtocol.h; sourceTree = "<group>"; };
+		5F10E9B6234B8866005AEC27 /* NewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewViewController.h; sourceTree = "<group>"; };
+		5F10E9B7234B8866005AEC27 /* NewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewViewController.m; sourceTree = "<group>"; };
 		5F2049AD1F7752D90062F376 /* STCBaseViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STCBaseViewModel.h; sourceTree = "<group>"; };
 		5F2049AE1F7752D90062F376 /* STCBaseViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STCBaseViewModel.m; sourceTree = "<group>"; };
 		5F2049B11F77534D0062F376 /* STCProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STCProxy.h; sourceTree = "<group>"; };
@@ -188,6 +198,8 @@
 				5F2049BA1F7778280062F376 /* Models */,
 				5F2049B41F7771060062F376 /* MasterViewModel.h */,
 				5F2049B51F7771060062F376 /* MasterViewModel.m */,
+				5F0A18062326CDDE004C3B8F /* ViewModel.h */,
+				5F0A18072326CDDE004C3B8F /* ViewModel.m */,
 			);
 			name = ViewModels;
 			sourceTree = "<group>";
@@ -195,6 +207,11 @@
 		5F6BFBD21F710F2F0058C2F9 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5F10E9B5234B5FAA005AEC27 /* ViewControllerProtocol.h */,
+				5F10E9B6234B8866005AEC27 /* NewViewController.h */,
+				5F10E9B7234B8866005AEC27 /* NewViewController.m */,
+				5F0A18032326CD7C004C3B8F /* ViewController.h */,
+				5F0A18042326CD7C004C3B8F /* ViewController.m */,
 				5F2049C11F77A44F0062F376 /* DetailViewController.h */,
 				5F2049C21F77A44F0062F376 /* DetailViewController.m */,
 				5F6BFBAE1F7104DE0058C2F9 /* MasterViewController.h */,
@@ -359,7 +376,10 @@
 				5F6BFBAD1F7104DE0058C2F9 /* AppDelegate.m in Sources */,
 				5F6BFBB01F7104DE0058C2F9 /* MasterViewController.m in Sources */,
 				5F2049C31F77A44F0062F376 /* DetailViewController.m in Sources */,
+				5F10E9B8234B8866005AEC27 /* NewViewController.m in Sources */,
 				5F2049BD1F7778600062F376 /* CellModel.m in Sources */,
+				5F0A18052326CD7C004C3B8F /* ViewController.m in Sources */,
+				5F0A18082326CDDE004C3B8F /* ViewModel.m in Sources */,
 				5F2049C01F7785080062F376 /* MasterTableViewCell.m in Sources */,
 				5F2049AF1F7752D90062F376 /* STCBaseViewModel.m in Sources */,
 				5F6BFBAA1F7104DE0058C2F9 /* main.m in Sources */,

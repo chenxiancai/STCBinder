@@ -7,7 +7,6 @@
 //
 
 #import "MasterViewController.h"
-#import "MasterViewModel.h"
 #import "MasterTableViewCell.h"
 #import "DetailViewController.h"
 
@@ -15,7 +14,6 @@
 
 @interface MasterViewController ()
 
-@property (nonatomic, strong) MasterViewModel *tableViewModel;
 @property (nonatomic, strong) UIAlertController *alert;
 
 @end
@@ -34,7 +32,6 @@
     self.tableView.delegate = self;
     [self.tableView registerClass:[MasterTableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
     self.tableView.tableHeaderView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
-    
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"upload"
                                                                         style:UIBarButtonItemStylePlain
                                                                        target:self.tableViewModel
@@ -91,7 +88,6 @@
 
 -(void)viewModelInitialize
 {
-    
     [self.tableViewModel bindProperty:STCGetPropertyName(headerName) withReactBlock:^(id value, id viewModel) {
         UILabel *label = (UILabel *)self.tableView.tableHeaderView;
         label.text = value;
@@ -160,6 +156,7 @@
         self.tableViewModel.selectedRow = button.tag;
     }] forControlEvents:UIControlEventTouchUpInside];
     cell.button.tag = indexPath.row;
+    
     return cell;
 }
 
