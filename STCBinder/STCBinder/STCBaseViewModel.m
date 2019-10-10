@@ -8,6 +8,7 @@
 
 #import "STCBaseViewModel.h"
 #import <objc/runtime.h>
+#import <UIKit/UIKit.h>
 
 typedef unsigned char u_char;
 typedef unsigned short u_short;
@@ -91,7 +92,7 @@ if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"BOOL"]) {\
 } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"u_long_long"]) {\
     return (returnType)[value unsignedLongLongValue];\
 } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"float"]) {\
-    return (returnType)[value floatValue];\
+    return [value floatValue];\
 } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"double"]) {\
     return (returnType)[value doubleValue];\
 } else {\
@@ -129,6 +130,121 @@ ProtocolIMPWithoutArg(float, 0)
 ProtocolIMP(double, 0.0)
 ProtocolIMPWithoutArg(double, 0)
 
+#define ProtocolStructIMP_2Value(returnType)   \
+static returnType impWithReturnType_##returnType(id self, SEL _cmd, id arg) {\
+    NSString *selName = NSStringFromSelector(_cmd);\
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    if (block) {\
+        NSValue *value = block(arg,selName);\
+        return [value returnType##Value];\
+    } else {\
+        return returnType##Make(0, 0);\
+    }\
+}
+
+#define ProtocolStructIMP_4Value(returnType)   \
+static returnType impWithReturnType_##returnType(id self, SEL _cmd, id arg) {\
+    NSString *selName = NSStringFromSelector(_cmd);\
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    if (block) {\
+        NSValue *value = block(arg,selName);\
+        return [value returnType##Value];\
+    } else {\
+        return returnType##Make(0, 0, 0, 0);\
+    }\
+}
+
+#define ProtocolStructIMP_6Value(returnType)   \
+static returnType impWithReturnType_##returnType(id self, SEL _cmd, id arg) {\
+    NSString *selName = NSStringFromSelector(_cmd);\
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    if (block) {\
+        NSValue *value = block(arg,selName);\
+        return [value returnType##Value];\
+    } else {\
+        return returnType##Make(0, 0, 0, 0, 0, 0);\
+    }\
+}
+
+#define ProtocolStructIMPWithoutArg_2Value(returnType)   \
+static returnType imp_noarg_withReturnType_##returnType(id self, SEL _cmd) {\
+    NSString *selName = NSStringFromSelector(_cmd);\
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    if (block) {\
+        NSValue *value = block(nil,selName);\
+        return [value returnType##Value];\
+    } else {\
+        return returnType##Make(0, 0);\
+    }\
+}
+
+#define ProtocolStructIMPWithoutArg_4Value(returnType)   \
+static returnType imp_noarg_withReturnType_##returnType(id self, SEL _cmd) {\
+    NSString *selName = NSStringFromSelector(_cmd);\
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    if (block) {\
+        NSValue *value = block(nil,selName);\
+        return [value returnType##Value];\
+    } else {\
+        return returnType##Make(0, 0, 0, 0);\
+    }\
+}
+
+#define ProtocolStructIMPWithoutArg_6Value(returnType)   \
+static returnType imp_noarg_withReturnType_##returnType(id self, SEL _cmd) {\
+    NSString *selName = NSStringFromSelector(_cmd);\
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    if (block) {\
+        NSValue *value = block(nil,selName);\
+        return [value returnType##Value];\
+    } else {\
+        return returnType##Make(0, 0, 0, 0, 0, 0);\
+    }\
+}
+
+ProtocolStructIMP_2Value(CGSize)
+ProtocolStructIMPWithoutArg_2Value(CGSize)
+ProtocolStructIMP_2Value(CGPoint)
+ProtocolStructIMPWithoutArg_2Value(CGPoint)
+ProtocolStructIMP_2Value(CGVector)
+ProtocolStructIMPWithoutArg_2Value(CGVector)
+ProtocolStructIMP_4Value(CGRect)
+ProtocolStructIMPWithoutArg_4Value(CGRect)
+ProtocolStructIMP_6Value(CGAffineTransform)
+ProtocolStructIMPWithoutArg_6Value(CGAffineTransform)
+ProtocolStructIMP_4Value(UIEdgeInsets)
+ProtocolStructIMPWithoutArg_4Value(UIEdgeInsets)
+ProtocolStructIMP_2Value(UIOffset)
+ProtocolStructIMPWithoutArg_2Value(UIOffset)
+
+#ifndef FOUNDATION_HAS_DIRECTIONAL_GEOMETRY
+
+static NSDirectionalEdgeInsets impWithReturnType_NSDirectionalEdgeInsets(id self, SEL _cmd, id arg)API_AVAILABLE(ios(11.0),tvos(11.0),watchos(4.0))
+{
+    NSString *selName = NSStringFromSelector(_cmd);
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    if (block) {
+        NSValue *value = block(arg,selName);
+        return [value directionalEdgeInsetsValue];
+    } else {
+        return NSDirectionalEdgeInsetsMake(0, 0, 0, 0);
+    }
+}
+
+static NSDirectionalEdgeInsets imp_noarg_withReturnType_NSDirectionalEdgeInsets(id self, SEL _cmd)API_AVAILABLE(ios(11.0),tvos(11.0),watchos(4.0))
+{
+    NSString *selName = NSStringFromSelector(_cmd);
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    if (block) {
+        NSValue *value = block(nil,selName);
+        return [value directionalEdgeInsetsValue];
+    } else {
+        return NSDirectionalEdgeInsetsMake(0, 0, 0, 0);
+    }
+}
+
+#endif
+
 
 #define AddMethod(selName, sel, types, returnType)\
 if ([selName containsString:@":"]) {\
@@ -154,6 +270,26 @@ static id imp_noarg_withReturnType_id(id self, SEL _cmd) {
         return  block(nil,selName);
     } else {
         return nil;
+    }
+}
+
+static Class impWithReturnType_Class(id self, SEL _cmd, id arg) {
+    NSString *selName = NSStringFromSelector(_cmd);
+    id (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    if (block) {
+        return block(arg,selName);
+    } else {
+        return NULL;
+    }
+}
+
+static Class imp_noarg_withReturnType_Class(id self, SEL _cmd) {
+    NSString *selName = NSStringFromSelector(_cmd);
+    id (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    if (block) {
+        return block(nil,selName);
+    } else {
+        return NULL;
     }
 }
 
@@ -191,33 +327,12 @@ static SEL imp_noarg_withReturnType_SEL(id self, SEL _cmd) {
     }
 }
 
-static Class impWithReturnType_Class(id self, SEL _cmd, id arg) {
-    NSString *selName = NSStringFromSelector(_cmd);
-    id (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
-    if (block) {
-        NSString *value =  block(arg,selName);
-        return NSClassFromString(value);
-    } else {
-        return NULL;
-    }
-}
-
-static Class imp_noarg_withReturnType_Class(id self, SEL _cmd) {
-    NSString *selName = NSStringFromSelector(_cmd);
-    id (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
-    if (block) {
-        NSString *value =  block(nil,selName);
-        return NSClassFromString(value);
-    } else {
-        return NULL;
-    }
-}
-
 static point impWithReturnType_point(id self, SEL _cmd, id arg) {
     NSString *selName = NSStringFromSelector(_cmd);
-    point (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
-        return  block(arg,selName);
+        NSValue *value = block(arg,selName);
+        return [value pointerValue];
     } else {
         return NULL;
     }
@@ -225,9 +340,10 @@ static point impWithReturnType_point(id self, SEL _cmd, id arg) {
 
 static point imp_noarg_withReturnType_point(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    point (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
-        return  block(nil,selName);
+        NSValue *value = block(nil,selName);
+        return [value pointerValue];
     } else {
         return NULL;
     }
@@ -235,19 +351,21 @@ static point imp_noarg_withReturnType_point(id self, SEL _cmd) {
 
 static c_point impWithReturnType_c_point(id self, SEL _cmd, id arg) {
     NSString *selName = NSStringFromSelector(_cmd);
-    c_point (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
-        return  block(arg,selName);
+        NSValue *value = block(arg,selName);
+        return [value pointerValue];
     } else {
         return NULL;
     }
 }
 
-static point imp_noarg_withReturnType_c_point(id self, SEL _cmd) {
+static c_point imp_noarg_withReturnType_c_point(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    point (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
-        return  block(nil,selName);
+        NSValue *value = block(nil,selName);
+        return [value pointerValue];
     } else {
         return NULL;
     }
@@ -471,10 +589,29 @@ static void selectorImp(id self, SEL _cmd, id arg) {
             AddMethod(selName, sel, types, c_point)
             break;
         }
-//        // Struct
-//        case _C_STRUCT_B: {
-//            break;
-//        }
+        // Struct
+        case _C_STRUCT_B: {
+            if ([types containsString:@"CGSize"]) {
+                AddMethod(selName, sel, types, CGSize)
+            } else if ([types containsString:@"CGPoint"]) {
+                AddMethod(selName, sel, types, CGPoint)
+            } else if ([types containsString:@"CGVector"]) {
+                AddMethod(selName, sel, types, CGVector)
+            } else if ([types containsString:@"CGRect"]) {
+                AddMethod(selName, sel, types, CGRect)
+            } else if ([types containsString:@"CGAffineTransform"]) {
+                AddMethod(selName, sel, types, CGAffineTransform)
+            } else if ([types containsString:@"UIEdgeInsets"]) {
+                AddMethod(selName, sel, types, UIEdgeInsets)
+            } else if ([types containsString:@"UIOffset"]) {
+                AddMethod(selName, sel, types, UIOffset)
+            } else if ([types containsString:@"NSDirectionalEdgeInsets"]) {
+                if (@available(iOS 11.0, *)) {
+                    AddMethod(selName, sel, types, NSDirectionalEdgeInsets)
+                }
+            }
+            break;
+        }
         default: {
             AddMethod(selName, sel, types, id)
             break;
@@ -488,6 +625,11 @@ static void selectorImp(id self, SEL _cmd, id arg) {
 - (STCBaseViewModel *)updateCurrentProtocol:(NSString *)protocol
 {
     self.currentProtocol = protocol;
+    return self;
+}
+
+- (STCBaseViewModel *)bindProtocol:(NSString *)protocol voidBlock:(VoidBlock)block
+{
     return self;
 }
 

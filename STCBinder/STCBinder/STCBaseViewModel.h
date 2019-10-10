@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^ReactBlock)(id value, id viewModel);
 typedef id (^ProtocolBlock)(id arg,NSString *selName);
+typedef void *(^VoidBlock)(id arg,NSString *selName);
 
 #define STCGetSeletorName(value) STCGetPropertyName(value)
 #define STCGetPropertyName(value) NSStringFromSelector(@selector(value))
@@ -50,6 +51,9 @@ typedef id (^ProtocolBlock)(id arg,NSString *selName);
 
 - (STCBaseViewModel *)bindProtocol:(NSString *)protocol
                     withReactBlock:(ProtocolBlock)block;
+
+- (STCBaseViewModel *)bindProtocol:(NSString *)protocol
+                         voidBlock:(VoidBlock)block;
 
 - (STCBaseViewModel *)updateCurrentProtocol:(NSString *)protocol;
 

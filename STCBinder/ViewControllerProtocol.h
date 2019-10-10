@@ -19,45 +19,57 @@
 
 - (id)idMethod;
 
-//- (NSString *)nsstringMethod;
-//
-//- (BOOL)boolMethod;
-//
-//- (Class)classMethod;
-//
-//- (SEL)selMethod;
+- (NSString *)nsstringMethod;
 
-//- (char)charMethod;
-//
-//- (unsigned char)unsignedCharMethod;
-//
-//- (short)shortMethod;
-//
-//- (unsigned short)unsignedShortMethod;
-//
-//- (int)intMethod;
-//
-//- (unsigned int)unsignedIntMethod;
-//
-//- (long)longMethod;
-//
-//- (unsigned long)unsignedLongMethod;
-//
-//- (long long)longlongMethod;
-//
-//- (unsigned long long)unsignedlonglongMethod;
-//
-//- (float)floatMethod;
-//
-//- (double)doubleMethod;
-//
-//- (char *)charPointMethod;
-//
-//- (void *)pointMethod;
-//
-//- (CGSize)structMethod;
+- (BOOL)boolMethod;
 
+- (Class)classMethod;
+
+- (SEL)selMethod;
+
+- (char)charMethod;
+
+- (unsigned char)unsignedCharMethod;
+
+- (short)shortMethod;
+
+- (unsigned short)unsignedShortMethod;
+
+- (int)intMethod;
+
+- (unsigned int)unsignedIntMethod;
+
+- (long)longMethod;
+
+- (unsigned long)unsignedLongMethod;
+
+- (long long)longlongMethod;
+
+- (unsigned long long)unsignedlonglongMethod;
+
+- (float)floatMethod;
+
+- (double)doubleMethod;
+
+- (char *)charPointMethod;
+
+- (void *)pointMethod;
+
+- (CGSize)CGSizetMethod;
+
+- (CGPoint)CGPointMethod;
+
+- (CGVector)CGVectorMethod;
+
+- (CGRect)CGRectMethod;
+
+- (CGAffineTransform)CGAffineTransformMethod;
+
+- (UIEdgeInsets)UIEdgeInsetsMethod;
+
+- (UIOffset)UIOffsetMethod;
+
+- (NSDirectionalEdgeInsets)NSDirectionalEdgeInsetsMethod API_AVAILABLE(ios(11.0));
 
 @end
 
-#endif /* ViewControllerProtocol_h */
