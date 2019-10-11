@@ -15,7 +15,7 @@
 
 - (void)voidMethod;
 
-- (void)voidMethodWithParam1:(NSString *)param1 andParam2:(NSString *)param2;
+- (void)voidMethodWithParam1:(BOOL)param1 andParam2:(NSString *)param2 andParam3:(BOOL)param2;
 
 - (id)idMethod;
 
@@ -69,7 +69,10 @@
 
 - (UIOffset)UIOffsetMethod;
 
-- (NSDirectionalEdgeInsets)NSDirectionalEdgeInsetsMethod API_AVAILABLE(ios(11.0));
+- (NSDirectionalEdgeInsets)NSDirectionalEdgeInsetsMethod;
+
 
 @end
+
+#endif /* ViewControllerProtocol_h */
 

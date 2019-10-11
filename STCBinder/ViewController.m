@@ -50,13 +50,13 @@ void testMethod(void)
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     self.aVC = [[NewViewController alloc] init];
-    self.aVC.delegate = (id <viewControllerProtocol>)[self.viewModel bindProtocol:STCGetProtocolName(viewControllerProtocol) withReactBlock:^id(id arg, NSString *selName) {
+    self.aVC.delegate = (id <viewControllerProtocol>)[self.viewModel bindProtocol:STCGetProtocolName(viewControllerProtocol) withReactBlock:^id(NSArray *arg, NSString *selName) {
 
         if ([selName isEqualToString:STCGetSeletorName(voidMethod)]) {
             return nil;
         }
         
-        if ([selName isEqualToString:STCGetSeletorName(voidMethodWithParam1:andParam2:)]) {
+        if ([selName isEqualToString:STCGetSeletorName(voidMethodWithParam1:andParam2:andParam3:)]) {
             return nil;
         }
         
@@ -69,7 +69,7 @@ void testMethod(void)
         }
 
         if ([selName isEqualToString:STCGetSeletorName(boolMethod)]) {
-            return [NSNumber numberWithBool:YES];
+            return @YES;
         }
 
         if ([selName isEqualToString:STCGetSeletorName(classMethod)]) {
@@ -82,79 +82,79 @@ void testMethod(void)
         
         if ([selName isEqualToString:STCGetSeletorName(charMethod)]) {
             char value = 0x90;
-            return [NSNumber numberWithChar:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(unsignedCharMethod)]) {
             unsigned char value = 0x99;
-            return [NSNumber numberWithUnsignedChar:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(shortMethod)]) {
             short value = - 77;
-            return [NSNumber numberWithShort:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(unsignedShortMethod)]) {
             unsigned short value = 88;
-            return [NSNumber numberWithUnsignedShort:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(intMethod)]) {
             int value = - 999;
-            return [NSNumber numberWithInt:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(unsignedIntMethod)]) {
             unsigned int value = 666;
-            return [NSNumber numberWithUnsignedInt:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(longMethod)]) {
             long value = -88888;
-            return [NSNumber numberWithLong:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(unsignedLongMethod)]) {
            unsigned long value = 777777;
-           return [NSNumber numberWithUnsignedLong:value];
+           return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(longlongMethod)]) {
             long long value = -10000000;
-            return [NSNumber numberWithLongLong:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(unsignedlonglongMethod)]) {
             unsigned long long value = 99999999;
-            return [NSNumber numberWithUnsignedLongLong:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(floatMethod)]) {
             float value = - 99.9;
-            return [NSNumber numberWithFloat:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(doubleMethod)]) {
             double value =  - 999999.99999;
-            return [NSNumber numberWithDouble:value];
+            return @(value);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(charPointMethod)]) {
             char *a;
             a = "hello";
-            return [NSValue valueWithPointer:a];
+            return @(a);
         }
         
         if ([selName isEqualToString:STCGetSeletorName(pointMethod)]) {
             void *b;
             b = testMethod;
             NSLog(@"%i",*((int*)b));
-            return [NSValue valueWithPointer:b];
+            return (__bridge id)b;
         }
         
         if ([selName isEqualToString:STCGetSeletorName(CGSizetMethod)]) {
-            return [NSValue valueWithCGSize:CGSizeMake(100.0, 100.0)];
+            return @(CGSizeMake(100.0, 100.0));
         }
         
         return nil;

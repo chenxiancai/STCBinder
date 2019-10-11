@@ -293,8 +293,134 @@ static Class imp_noarg_withReturnType_Class(id self, SEL _cmd) {
     }
 }
 
-static void impWithReturnType_void(id self, SEL _cmd, id arg) {
+static void impWithReturnType_void(id self, SEL _cmd, id arg, ...) {
+    
     NSString *selName = NSStringFromSelector(_cmd);
+    
+    NSMethodSignature *signature = [self methodSignatureForSelector:_cmd];
+    NSUInteger numberOfArguments = signature.numberOfArguments;
+    
+    va_list list;
+    va_start(list, arg);
+    NSMutableArray *params = [NSMutableArray array];
+  
+    for (int i = 2; i < numberOfArguments; i ++) {
+        char returnType[255];
+        strcpy(returnType, [signature getArgumentTypeAtIndex:i]);
+        NSLog(@"%s",returnType);
+        switch (returnType[0]) {
+               // Objective-C object
+           case _C_ID: {
+               id value;
+               i == 2 ? (value = arg) : (value = va_arg(list, id)) ;
+               value ? [params addObject:value] : [params addObject:[NSValue valueWithPointer:nil]];
+               break;
+           }
+           case _C_CLASS: {
+               Class value;
+               i == 2 ? (value = arg) : (value = va_arg(list, Class)) ;
+               value ? [params addObject:value] : [params addObject:[NSValue valueWithPointer:nil]];
+               break;
+           }
+           case _C_SEL: {
+//               SEL value;
+//               i == 2 ? (value = arg) : (value = va_arg(list, SEL)) ;
+//               value ? [params addObject:value] : [params addObject:[NSValue valueWithPointer:nil]];
+               break;
+           }
+           case _C_CHR: {
+               char value = va_arg(list, int);
+               break;
+           }
+           case _C_UCHR: {
+               u_char value = va_arg(list, int);
+               break;
+           }
+           case _C_SHT: {
+               short value = va_arg(list, int);
+               break;
+           }
+           case _C_USHT: {
+               u_short value = va_arg(list, u_int);
+               break;
+           }
+           case _C_INT: {
+               int value = va_arg(list, int);
+               break;
+           }
+           case _C_UINT: {
+               u_int value = va_arg(list, u_int);
+               break;
+           }
+           case _C_LNG: {
+               long value = va_arg(list, long);
+               break;
+           }
+           case _C_ULNG: {
+               u_long value = va_arg(list, u_long);
+               break;
+           }
+           case _C_LNG_LNG: {
+               long_long value = va_arg(list, long_long);
+               break;
+           }
+           case _C_ULNG_LNG: {
+               u_long_long value = va_arg(list, u_long_long);
+               break;
+           }
+           case _C_FLT: {
+               float value = va_arg(list, double);
+               break;
+           }
+           case _C_DBL: {
+               double value = va_arg(list, double);
+               break;
+           }
+           case _C_BOOL: {
+               BOOL value = va_arg(list, int);
+               break;
+           }
+           // C Pointer
+           case _C_PTR: {
+               void *value = va_arg(list, void *);
+               break;
+           }
+           case _C_CHARPTR: {
+               char *value = va_arg(list, char *);
+               break;
+           }
+           // Struct
+           case _C_STRUCT_B: {
+//                   if ([types containsString:@"CGSize"]) {
+//                       AddMethod(selName, sel, types, CGSize)
+//                   } else if ([types containsString:@"CGPoint"]) {
+//                       AddMethod(selName, sel, types, CGPoint)
+//                   } else if ([types containsString:@"CGVector"]) {
+//                       AddMethod(selName, sel, types, CGVector)
+//                   } else if ([types containsString:@"CGRect"]) {
+//                       AddMethod(selName, sel, types, CGRect)
+//                   } else if ([types containsString:@"CGAffineTransform"]) {
+//                       AddMethod(selName, sel, types, CGAffineTransform)
+//                   } else if ([types containsString:@"UIEdgeInsets"]) {
+//                       AddMethod(selName, sel, types, UIEdgeInsets)
+//                   } else if ([types containsString:@"UIOffset"]) {
+//                       AddMethod(selName, sel, types, UIOffset)
+//                   } else if ([types containsString:@"NSDirectionalEdgeInsets"]) {
+//                       if (@available(iOS 11.0, *)) {
+//                           AddMethod(selName, sel, types, NSDirectionalEdgeInsets)
+//                       }
+//                   }
+//                   break;
+           }
+           default: {
+               break;
+           }
+        }
+        
+//        [params addObject:value];
+    }
+    va_end(list);
+    
     void (^block)(id arg,NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) block(arg,selName);
 }

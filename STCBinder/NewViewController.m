@@ -26,7 +26,7 @@
 - (void)test
 {
     [_delegate voidMethod];
-    [_delegate voidMethodWithParam1:@"Param1" andParam2:@"Param2"];
+    [_delegate voidMethodWithParam1:NO andParam2:@"Param2" andParam3:YES];
     NSLog(@"idMethod %@",[_delegate idMethod]);
     NSLog(@"nsstringMethod %@",[_delegate nsstringMethod]);
     NSLog(@"boolMethod %d",[_delegate boolMethod]);
