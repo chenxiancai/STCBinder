@@ -10,6 +10,9 @@
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wvarargs"
+
 typedef unsigned char u_char;
 typedef unsigned short u_short;
 typedef unsigned int u_int;
@@ -294,9 +297,9 @@ static Class imp_noarg_withReturnType_Class(id self, SEL _cmd) {
 }
 
 
-#define AddNumberParam(valueType,agrType) \
+#define AddNumberParam(valueType) \
         valueType value;\
-        i == 2 ? (value = (valueType)arg) : (value =  (valueType)va_arg(list, agrType));\
+        i == 2 ? (value = (valueType)arg) : (value =  (valueType)va_arg(list, valueType));\
         [params addObject:@(value)];
 
 #define AddObjectParam(valueType) \
@@ -304,138 +307,418 @@ static Class imp_noarg_withReturnType_Class(id self, SEL _cmd) {
         value ? [params addObject:value] : [params addObject:[NSValue valueWithPointer:nil]];
 
 
-#define ProtocolIMPWithNumArg(returnType, defautValue, argType)
-
-static void impWithReturnType_void_BOOL(id self, SEL _cmd, int arg, ...)
-{
-    NSString *selName = NSStringFromSelector(_cmd);
-    NSMethodSignature *signature = [self methodSignatureForSelector:_cmd];
-    NSUInteger numberOfArguments = signature.numberOfArguments;
-    va_list list;
-    va_start(list, arg);
-    NSMutableArray *params = [NSMutableArray array];
-    for (int i = 2; i < numberOfArguments; i ++) {
-        char returnType[255];
-        strcpy(returnType, [signature getArgumentTypeAtIndex:i]);
-        switch (returnType[0]) {
-            case _C_ID: {
-                AddObjectParam(id)
-                break;
-            }
-            case _C_CLASS: {
-                AddObjectParam(Class)
-                break;
-            }
-            case _C_SEL: {
-                SEL value = va_arg(list, SEL);
-                value ? [params addObject:NSStringFromSelector(value)] : [params addObject:[NSValue valueWithPointer:nil]];
-                break;
-            }
-            case _C_PTR: {
-                void *value = va_arg(list, void *);
-                [params addObject:[NSValue valueWithPointer:value]];
-                break;
-            }
-            case _C_CHARPTR: {
-                char *value = va_arg(list, char *);
-                [params addObject:@(value)];
-                break;
-            }
-            case _C_CHR: {
-                AddNumberParam(char, int)
-                break;
-            }
-            case _C_UCHR: {
-                AddNumberParam(u_char, int)
-                break;
-            }
-            case _C_SHT: {
-                AddNumberParam(short, int)
-                break;
-            }
-            case _C_USHT: {
-                AddNumberParam(u_short, int)
-                break;
-            }
-            case _C_INT: {
-                AddNumberParam(int, int)
-                break;
-            }
-            case _C_UINT: {
-                AddNumberParam(u_int, u_int)
-                break;
-            }
-            case _C_LNG: {
-                AddNumberParam(long, long)
-                break;
-            }
-            case _C_ULNG: {
-                AddNumberParam(u_long, u_long)
-                break;
-            }
-            case _C_LNG_LNG: {
-                AddNumberParam(long_long, long_long)
-                break;
-            }
-            case _C_ULNG_LNG: {
-                AddNumberParam(u_long_long, u_long_long)
-                break;
-            }
-            case _C_FLT: {
-                AddNumberParam(float, double)
-                break;
-            }
-            case _C_DBL: {
-                AddNumberParam(double, double)
-                break;
-            }
-            case _C_BOOL: {
-                AddNumberParam(BOOL, int)
-                break;
-            }
-            default: {
-                break;
-            }
-        }
-    }
-    va_end(list);
-    NSValue* (^block)(NSArray *args, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
-//    if (block) {\
-//        NSValue *value = block([NSArray arrayWithArray:params],selName);;\
-//        if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"BOOL"]) {\
-//            return (returnType)[value boolValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"char"]) {\
-//            return (returnType)[value charValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"u_char"]) {\
-//            return (returnType)[value unsignedCharValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"short"]) {\
-//            return (returnType)[value shortValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"u_short"]) {\
-//            return (returnType)[value unsignedShortValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"int"]) {\
-//            return (returnType)[value intValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"u_int"]) {\
-//            return (returnType)[value unsignedIntValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"long"]) {\
-//            return (returnType)[value longValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"u_long"]) {\
-//            return (returnType)[value unsignedLongValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"long_long"]) {\
-//            return (returnType)[value longLongValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"u_long_long"]) {\
-//            return (returnType)[value unsignedLongLongValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"float"]) {\
-//            return [value floatValue];\
-//        } else if ([[NSString stringWithUTF8String:#returnType] isEqualToString:@"double"]) {\
-//            return (returnType)[value doubleValue];\
-//        } else {\
-//            return defautValue;\
-//        }\
-//    } else {\
-//        return defautValue;\
-//    }\
-    
+#define ProtocolIMPWithNumReturnTypeAndRamdomArgType(name, returnType, defautValue, argType)\
+static returnType impWithReturnType_returnType_And_ArgType_##name(id self, SEL _cmd, argType arg, ...){\
+    NSString *selName = NSStringFromSelector(_cmd);\
+    NSMethodSignature *signature = [self methodSignatureForSelector:_cmd];\
+    NSUInteger numberOfArguments = signature.numberOfArguments;\
+    va_list list;\
+    va_start(list, arg);\
+    NSMutableArray *params = [NSMutableArray array];\
+    for (int i = 2; i < numberOfArguments; i ++) {\
+        char returnArgType[255];\
+        strcpy(returnArgType, [signature getArgumentTypeAtIndex:i]);\
+        switch (returnArgType[0]) {\
+            case _C_ID: {\
+                AddObjectParam(id)\
+                break;\
+            }\
+            case _C_CLASS: {\
+                AddObjectParam(Class)\
+                break;\
+            }\
+            case _C_SEL: {\
+                SEL value = va_arg(list, SEL);\
+                value ? [params addObject:NSStringFromSelector(value)] : [params addObject:[NSValue valueWithPointer:nil]];\
+                break;\
+            }\
+            case _C_PTR: {\
+                void *value = va_arg(list, void *);\
+                [params addObject:[NSValue valueWithPointer:value]];\
+                break;\
+            }\
+            case _C_CHARPTR: {\
+                char *value = va_arg(list, char *);\
+                [params addObject:@(value)];\
+                break;\
+            }\
+            case _C_STRUCT_B: {\
+                NSString *types = [NSString stringWithUTF8String:returnArgType];\
+                if ([types containsString:@"CGSize"]) {\
+                    CGSize value =  (CGSize)va_arg(list, CGSize);\
+                    [params addObject:@(value)];\
+                } else if ([types containsString:@"CGPoint"]) {\
+                    CGPoint value =  (CGPoint)va_arg(list, CGPoint);\
+                    [params addObject:@(value)];\
+                } else if ([types containsString:@"CGVector"]) {\
+                    CGVector value =  (CGVector)va_arg(list, CGVector);\
+                    [params addObject:@(value)];\
+                } else if ([types containsString:@"CGRect"]) {\
+                    CGRect value =  (CGRect)va_arg(list, CGRect);\
+                    [params addObject:@(value)];\
+                } else if ([types containsString:@"UIEdgeInsets"]) {\
+                    UIEdgeInsets value =  (UIEdgeInsets)va_arg(list, UIEdgeInsets);\
+                    [params addObject:@(value)];\
+                } else if ([types containsString:@"UIOffset"]) {\
+                    UIOffset value =  (UIOffset)va_arg(list, UIOffset);\
+                    [params addObject:@(value)];\
+                } else if ([types containsString:@"NSDirectionalEdgeInsets"]) {\
+                    if (@available(iOS 11.0, *)) {\
+                        NSDirectionalEdgeInsets value =  (NSDirectionalEdgeInsets)va_arg(list, NSDirectionalEdgeInsets);\
+                        [params addObject:@(value)];\
+                    }\
+                } else if ([types containsString:@"CGAffineTransform"]) {\
+                    CGAffineTransform value =  (CGAffineTransform)va_arg(list, CGAffineTransform);\
+                    [params addObject:[NSValue valueWithCGAffineTransform:value]];\
+                } else if ([types containsString:@"NSRange"]) {\
+                    NSRange value =  (NSRange)va_arg(list, NSRange);\
+                    [params addObject:[NSValue valueWithRange:value]];\
+                } else if ([types containsString:@"CATransform3D"]) {\
+                    CATransform3D value =  (CATransform3D)va_arg(list, CATransform3D);\
+                    [params addObject:[NSValue valueWithCATransform3D:value]];\
+                }\
+                break;\
+            }\
+            case _C_CHR: {\
+                AddNumberParam(char)\
+                break;\
+            }\
+            case _C_UCHR: {\
+                AddNumberParam(u_char)\
+                break;\
+            }\
+            case _C_SHT: {\
+                AddNumberParam(short)\
+                break;\
+            }\
+            case _C_USHT: {\
+                AddNumberParam(u_short)\
+                break;\
+            }\
+            case _C_INT: {\
+                AddNumberParam(int)\
+                break;\
+            }\
+            case _C_UINT: {\
+                AddNumberParam(u_int)\
+                break;\
+            }\
+            case _C_LNG: {\
+                AddNumberParam(long)\
+                break;\
+            }\
+            case _C_ULNG: {\
+                AddNumberParam(u_long)\
+                break;\
+            }\
+            case _C_LNG_LNG: {\
+                AddNumberParam(long_long)\
+                break;\
+            }\
+            case _C_ULNG_LNG: {\
+                AddNumberParam(u_long_long)\
+                break;\
+            }\
+            case _C_FLT: {\
+                AddNumberParam(float)\
+                break;\
+            }\
+            case _C_DBL: {\
+                AddNumberParam(double)\
+                break;\
+            }\
+            case _C_BOOL: {\
+                AddNumberParam(BOOL)\
+                break;\
+            }\
+            default: {\
+                break;\
+            }\
+        }\
+    }\
+    va_end(list);\
+    NSNumber* (^block)(NSArray *args, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    if (block) {\
+        NSNumber *value = block([NSArray arrayWithArray:params],selName);\
+        char returnValueType[255];\
+        strcpy(returnValueType, @encode(argType));\
+        switch (returnValueType[0]) {\
+               case _C_CHR: {\
+                   return [value charValue];\
+                   break;\
+               }\
+               case _C_UCHR: {\
+                   return [value unsignedCharValue];\
+                   break;\
+               }\
+               case _C_SHT: {\
+                   return [value shortValue];\
+                   break;\
+               }\
+               case _C_USHT: {\
+                   return [value unsignedShortValue];\
+                   break;\
+               }\
+               case _C_INT: {\
+                   return [value intValue];\
+                   break;\
+               }\
+               case _C_UINT: {\
+                   return [value unsignedIntValue];\
+                   break;\
+               }\
+               case _C_LNG: {\
+                   return [value longValue];\
+                   break;\
+               }\
+               case _C_ULNG: {\
+                   return [value unsignedLongValue];\
+                   break;\
+               }\
+               case _C_LNG_LNG: {\
+                   return [value longLongValue];\
+                   break;\
+               }\
+               case _C_ULNG_LNG: {\
+                   return [value unsignedLongValue];\
+                   break;\
+               }\
+               case _C_FLT: {\
+                   return [value floatValue];\
+                   break;\
+               }\
+               case _C_DBL: {\
+                   return [value doubleValue];\
+                   break;\
+               }\
+               case _C_BOOL: {\
+                   return [value boolValue];\
+                   break;\
+               }\
+               default: {\
+                   return defautValue;\
+               }\
+        }\
+    } else {\
+        return defautValue;\
+    }\
 }
+
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(BB, BOOL, NO, BOOL)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(cc, char, 0, char)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(ucc, u_char, 0, u_char)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(ss, short, 0, short)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(uss, u_short, 0, u_short)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(ii, int, 0, int)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(uii, u_int, 0, u_int)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(ll, long, 0, long)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(ull, u_long, 0, u_long)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(llll, long_long, 0, long_long)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(ullll, u_long_long, 0, u_long_long)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(ff, float, 0.0, float)
+ProtocolIMPWithNumReturnTypeAndRamdomArgType(dd, double, 0.0, double)
+
+
+
+
+
+//static BOOL impWithReturnType_BOOL_ArgType_BOOL(id self, SEL _cmd, BOOL arg, ...)
+//{
+//    NSString *selName = NSStringFromSelector(_cmd);
+//    NSMethodSignature *signature = [self methodSignatureForSelector:_cmd];
+//    NSUInteger numberOfArguments = signature.numberOfArguments;
+//    va_list list;
+//    va_start(list, arg);
+//    NSMutableArray *params = [NSMutableArray array];
+//    for (int i = 2; i < numberOfArguments; i ++) {
+//        char returnArgType[255];
+//        strcpy(returnArgType, [signature getArgumentTypeAtIndex:i]);
+//        switch (returnArgType[0]) {
+//            case _C_ID: {
+//                AddObjectParam(id)
+//                break;
+//            }
+//            case _C_CLASS: {
+//                AddObjectParam(Class)
+//                break;
+//            }
+//            case _C_SEL: {
+//                SEL value = va_arg(list, SEL);
+//                value ? [params addObject:NSStringFromSelector(value)] : [params addObject:[NSValue valueWithPointer:nil]];
+//                break;
+//            }
+//            case _C_PTR: {
+//                void *value = va_arg(list, void *);
+//                [params addObject:[NSValue valueWithPointer:value]];
+//                break;
+//            }
+//            case _C_CHARPTR: {
+//                char *value = va_arg(list, char *);
+//                [params addObject:@(value)];
+//                break;
+//            }
+//            case _C_STRUCT_B: {
+//                NSString *types = [NSString stringWithUTF8String:returnArgType];
+//                if ([types containsString:@"CGSize"]) {
+//                    CGSize value =  (CGSize)va_arg(list, CGSize);
+//                    [params addObject:@(value)];
+//                } else if ([types containsString:@"CGPoint"]) {
+//                    CGPoint value =  (CGPoint)va_arg(list, CGPoint);
+//                    [params addObject:@(value)];
+//                } else if ([types containsString:@"CGVector"]) {
+//                    CGVector value =  (CGVector)va_arg(list, CGVector);
+//                    [params addObject:@(value)];
+//                } else if ([types containsString:@"CGRect"]) {
+//                    CGRect value =  (CGRect)va_arg(list, CGRect);
+//                    [params addObject:@(value)];
+//                } else if ([types containsString:@"UIEdgeInsets"]) {
+//                    UIEdgeInsets value =  (UIEdgeInsets)va_arg(list, UIEdgeInsets);
+//                    [params addObject:@(value)];
+//                } else if ([types containsString:@"UIOffset"]) {
+//                    UIOffset value =  (UIOffset)va_arg(list, UIOffset);
+//                    [params addObject:@(value)];
+//                } else if ([types containsString:@"NSDirectionalEdgeInsets"]) {
+//                    if (@available(iOS 11.0, *)) {
+//                        NSDirectionalEdgeInsets value =  (NSDirectionalEdgeInsets)va_arg(list, NSDirectionalEdgeInsets);
+//                        [params addObject:@(value)];
+//                    }
+//                } else if ([types containsString:@"CGAffineTransform"]) {
+//                    CGAffineTransform value =  (CGAffineTransform)va_arg(list, CGAffineTransform);
+//                    [params addObject:[NSValue valueWithCGAffineTransform:value]];
+//                } else if ([types containsString:@"NSRange"]) {
+//                    NSRange value =  (NSRange)va_arg(list, NSRange);
+//                    [params addObject:[NSValue valueWithRange:value]];
+//                } else if ([types containsString:@"CATransform3D"]) {
+//                    CATransform3D value =  (CATransform3D)va_arg(list, CATransform3D);
+//                    [params addObject:[NSValue valueWithCATransform3D:value]];
+//                }
+//                break;
+//            }
+//            case _C_CHR: {
+//                AddNumberParam(char)
+//                break;
+//            }
+//            case _C_UCHR: {
+//                AddNumberParam(u_char)
+//                break;
+//            }
+//            case _C_SHT: {
+//                AddNumberParam(short)
+//                break;
+//            }
+//            case _C_USHT: {
+//                AddNumberParam(u_short)
+//                break;
+//            }
+//            case _C_INT: {
+//                AddNumberParam(int)
+//                break;
+//            }
+//            case _C_UINT: {
+//                AddNumberParam(u_int)
+//                break;
+//            }
+//            case _C_LNG: {
+//                AddNumberParam(long)
+//                break;
+//            }
+//            case _C_ULNG: {
+//                AddNumberParam(u_long)
+//                break;
+//            }
+//            case _C_LNG_LNG: {
+//                AddNumberParam(long_long)
+//                break;
+//            }
+//            case _C_ULNG_LNG: {
+//                AddNumberParam(u_long_long)
+//                break;
+//            }
+//            case _C_FLT: {
+//                AddNumberParam(float)
+//                break;
+//            }
+//            case _C_DBL: {
+//                AddNumberParam(double)
+//                break;
+//            }
+//            case _C_BOOL: {
+//                AddNumberParam(BOOL)
+//                break;
+//            }
+//            default: {
+//                break;
+//            }
+//        }
+//    }
+//    va_end(list);
+//    NSNumber* (^block)(NSArray *args, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+//    if (block) {
+//        NSNumber *value = block([NSArray arrayWithArray:params],selName);
+//        char returnValueType[255];
+//        strcpy(returnValueType, @encode(BOOL));
+//        switch (returnValueType[0]) {
+//               case _C_CHR: {
+//                   return [value charValue];
+//                   break;
+//               }
+//               case _C_UCHR: {
+//                   return [value unsignedCharValue];
+//                   break;
+//               }
+//               case _C_SHT: {
+//                   return [value shortValue];
+//                   break;
+//               }
+//               case _C_USHT: {
+//                   return [value unsignedShortValue];
+//                   break;
+//               }
+//               case _C_INT: {
+//                   return [value intValue];
+//                   break;
+//               }
+//               case _C_UINT: {
+//                   return [value unsignedIntValue];
+//                   break;
+//               }
+//               case _C_LNG: {
+//                   return [value longValue];
+//                   break;
+//               }
+//               case _C_ULNG: {
+//                   return [value unsignedLongValue];
+//                   break;
+//               }
+//               case _C_LNG_LNG: {
+//                   return [value longLongValue];
+//                   break;
+//               }
+//               case _C_ULNG_LNG: {
+//                   return [value unsignedLongValue];
+//                   break;
+//               }
+//               case _C_FLT: {
+//                   return [value floatValue];
+//                   break;
+//               }
+//               case _C_DBL: {
+//                   return [value doubleValue];
+//                   break;
+//               }
+//               case _C_BOOL: {
+//                   return [value boolValue];
+//                   break;
+//               }
+//               default: {
+//                   return NO;
+//               }
+//        }
+//    } else {
+//        return NO;
+//    }
+//}
+
 
 static void impWithReturnType_void(id self, SEL _cmd, id arg, ...)
 {
@@ -852,7 +1135,13 @@ static void selectorImp(id self, SEL _cmd, id arg) {
             break;
         }
         case _C_BOOL: {
-            AddMethod(selName, sel, types, BOOL)
+            if ([selName containsString:@":"]) {
+                class_addMethod([self class], sel, (IMP)impWithReturnType_returnType_And_ArgType_BB, types.UTF8String);
+            } else {
+                class_addMethod([self class], sel, (IMP)GetProtocolIMPWithoutArg(BOOL), types.UTF8String);
+            }
+
+            //AddMethod(selName, sel, types, BOOL)
             break;
         }
         // C Pointer
@@ -968,3 +1257,5 @@ static void selectorImp(id self, SEL _cmd, id arg) {
 }
 
 @end
+
+#pragma clang diagnostic pop

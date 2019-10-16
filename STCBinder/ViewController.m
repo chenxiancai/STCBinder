@@ -52,110 +52,177 @@ void testMethod(void)
     self.aVC = [[NewViewController alloc] init];
     self.aVC.delegate = (id <viewControllerProtocol>)[self.viewModel bindProtocol:STCGetProtocolName(viewControllerProtocol) withReactBlock:^id(NSArray *arg, NSString *selName) {
 
-        if ([selName isEqualToString:STCGetSeletorName(voidMethod)]) {
-            return nil;
-        }
+//        if ([selName isEqualToString:STCGetSeletorName(voidMethod)]) {
+//            return nil;
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(voidMethodWithParam1:andParam2:andParam3:)]) {
+//            return nil;
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(idMethod)]) {
+//            return self;
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(nsstringMethod)]) {
+//            return @"NSString";
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(boolMethod)]) {
+//            return @YES;
+//        }
         
-        if ([selName isEqualToString:STCGetSeletorName(voidMethodWithParam1:andParam2:andParam3:)]) {
-            return nil;
-        }
         
-        if ([selName isEqualToString:STCGetSeletorName(idMethod)]) {
-            return self;
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(nsstringMethod)]) {
-            return @"NSString";
+        if ([selName isEqualToString:STCGetSeletorName(BOOLMethodWithParam1:andParam2:)])
+        {
+            return @NO;
         }
 
-        if ([selName isEqualToString:STCGetSeletorName(boolMethod)]) {
-            return @YES;
+        if ([selName isEqualToString:STCGetSeletorName(charMethodWithParam1:andParam2:)])
+        {
+            return @(-64);
         }
 
-        if ([selName isEqualToString:STCGetSeletorName(classMethod)]) {
-            return [self class];
+        if ([selName isEqualToString:STCGetSeletorName(u_charMethodWithParam1:andParam2:)])
+        {
+            return @(64);
         }
 
-        if ([selName isEqualToString:STCGetSeletorName(selMethod)]) {
-            return NSStringFromSelector(@selector(viewDidLoad));
+        if ([selName isEqualToString:STCGetSeletorName(shortMethodWithParam1:andParam2:)])
+        {
+            return @(-98);
+        }
+
+        if ([selName isEqualToString:STCGetSeletorName(u_shortMethodWithParam1:andParam2:)])
+        {
+            return @(77);
+        }
+
+        if ([selName isEqualToString:STCGetSeletorName(intMethodWithParam1:andParam2:)])
+        {
+            return @(-34);
+        }
+
+        if ([selName isEqualToString:STCGetSeletorName(u_intMethodWithParam1:andParam2:)])
+        {
+            return @(14);
         }
         
-        if ([selName isEqualToString:STCGetSeletorName(charMethod)]) {
-            char value = 0x90;
-            return @(value);
+        if ([selName isEqualToString:STCGetSeletorName(longMethodWithParam1:andParam2:)])
+        {
+            return @(-9999999);
         }
         
-        if ([selName isEqualToString:STCGetSeletorName(unsignedCharMethod)]) {
-            unsigned char value = 0x99;
-            return @(value);
+        if ([selName isEqualToString:STCGetSeletorName(u_longMethodWithParam1:andParam2:)])
+        {
+            return @(1999999809);
         }
         
-        if ([selName isEqualToString:STCGetSeletorName(shortMethod)]) {
-            short value = - 77;
-            return @(value);
+        if ([selName isEqualToString:STCGetSeletorName(long_longMethodWithParam1:andParam2:)])
+        {
+            return @(-19999099998878781);
         }
         
-        if ([selName isEqualToString:STCGetSeletorName(unsignedShortMethod)]) {
-            unsigned short value = 88;
-            return @(value);
+        if ([selName isEqualToString:STCGetSeletorName(u_long_longMethodWithParam1:andParam2:)])
+        {
+            return @(933199999998878781);
+        }
+
+        if ([selName isEqualToString:STCGetSeletorName(floatMethodWithParam1:andParam2:)])
+        {
+            return @(-888.555);
         }
         
-        if ([selName isEqualToString:STCGetSeletorName(intMethod)]) {
-            int value = - 999;
-            return @(value);
+        if ([selName isEqualToString:STCGetSeletorName(doubleMethodWithParam1:andParam2:)])
+        {
+            return @(844488.999555);
         }
-        
-        if ([selName isEqualToString:STCGetSeletorName(unsignedIntMethod)]) {
-            unsigned int value = 666;
-            return @(value);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(longMethod)]) {
-            long value = -88888;
-            return @(value);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(unsignedLongMethod)]) {
-           unsigned long value = 777777;
-           return @(value);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(longlongMethod)]) {
-            long long value = -10000000;
-            return @(value);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(unsignedlonglongMethod)]) {
-            unsigned long long value = 99999999;
-            return @(value);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(floatMethod)]) {
-            float value = - 99.9;
-            return @(value);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(doubleMethod)]) {
-            double value =  - 999999.99999;
-            return @(value);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(charPointMethod)]) {
-            char *a;
-            a = "hello";
-            return @(a);
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(pointMethod)]) {
-            void *b;
-            b = testMethod;
-            NSLog(@"%i",*((int*)b));
-            return (__bridge id)b;
-        }
-        
-        if ([selName isEqualToString:STCGetSeletorName(CGSizetMethod)]) {
-            return @(CGSizeMake(100.0, 100.0));
-        }
+
+
+//        if ([selName isEqualToString:STCGetSeletorName(classMethod)]) {
+//            return [self class];
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(selMethod)]) {
+//            return NSStringFromSelector(@selector(viewDidLoad));
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(charMethod)]) {
+//            char value = 0x90;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(unsignedCharMethod)]) {
+//            unsigned char value = 0x99;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(shortMethod)]) {
+//            short value = - 77;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(unsignedShortMethod)]) {
+//            unsigned short value = 88;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(intMethod)]) {
+//            int value = - 999;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(unsignedIntMethod)]) {
+//            unsigned int value = 666;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(longMethod)]) {
+//            long value = -88888;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(unsignedLongMethod)]) {
+//           unsigned long value = 777777;
+//           return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(longlongMethod)]) {
+//            long long value = -10000000;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(unsignedlonglongMethod)]) {
+//            unsigned long long value = 99999999;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(floatMethod)]) {
+//            float value = - 99.9;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(doubleMethod)]) {
+//            double value =  - 999999.99999;
+//            return @(value);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(charPointMethod)]) {
+//            char *a;
+//            a = "hello";
+//            return @(a);
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(pointMethod)]) {
+//            void *b;
+//            b = testMethod;
+//            NSLog(@"%i",*((int*)b));
+//            return (__bridge id)b;
+//        }
+//
+//        if ([selName isEqualToString:STCGetSeletorName(CGSizetMethod)]) {
+//            return @(CGSizeMake(100.0, 100.0));
+//        }
         
         return nil;
     }];

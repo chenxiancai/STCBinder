@@ -10,18 +10,53 @@
 #define ViewControllerProtocol_h
 #import <objc/runtime.h>
 
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
+typedef unsigned long u_long;
+typedef long long long_long;
+typedef unsigned long long u_long_long;
+typedef void * point;
+typedef char * c_point;
+
+#define TEST_METHOD_WITH_TYPE_AND_ARG(type)\
+- (type)type##MethodWithParam1:(type)param1 andParam2:(type)param2;
+
+#define TEST_METHOD_WITH_TYPE_WITHOUT_ARG(type)\
+- (type)type##Method;
+
 
 @protocol viewControllerProtocol <NSObject>
 
-- (void)voidMethod;
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(BOOL)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(char)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(u_char)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(short)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(u_short)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(int)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(u_int)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(long)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(u_long)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(long_long)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(u_long_long)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(float)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(double)
 
-- (void)voidMethodWithParam1:(BOOL)param1 andParam2:(NSString *)param2 andParam3:(BOOL)param2;
+TEST_METHOD_WITH_TYPE_AND_ARG(BOOL)
+TEST_METHOD_WITH_TYPE_AND_ARG(char)
+TEST_METHOD_WITH_TYPE_AND_ARG(u_char)
+TEST_METHOD_WITH_TYPE_AND_ARG(short)
+TEST_METHOD_WITH_TYPE_AND_ARG(u_short)
+TEST_METHOD_WITH_TYPE_AND_ARG(int)
+TEST_METHOD_WITH_TYPE_AND_ARG(u_int)
+TEST_METHOD_WITH_TYPE_AND_ARG(long)
+TEST_METHOD_WITH_TYPE_AND_ARG(u_long)
+TEST_METHOD_WITH_TYPE_AND_ARG(long_long)
+TEST_METHOD_WITH_TYPE_AND_ARG(u_long_long)
+TEST_METHOD_WITH_TYPE_AND_ARG(float)
+TEST_METHOD_WITH_TYPE_AND_ARG(double)
 
-- (id)idMethod;
 
-- (NSString *)nsstringMethod;
-
-- (BOOL)boolMethod;
 
 - (Class)classMethod;
 
