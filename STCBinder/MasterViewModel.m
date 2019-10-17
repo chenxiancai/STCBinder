@@ -24,6 +24,7 @@
         self.headerName = nil;
         self.uploading = NO;
         self.selectedRow = 0;
+        self.cellButtonTag = 1000;
     }
     return self;
 }
@@ -79,6 +80,14 @@
     [dataSources removeObjectAtIndex:indexPath.row];
     self.tableDataSources = [NSArray arrayWithArray:dataSources];
     self.headerName = [NSString stringWithFormat:@"total count :%@", @(self.tableDataSources.count)];
+}
+
+- (void)actionBindedProperty:(NSString *)property withArg:(id)arg actionBlock:(ReactBlock)block
+{
+    NSLog(@"arg :%@", arg);
+    if (arg) {
+        [super actionBindedProperty:property withArg:arg actionBlock:block];
+    }
 }
 
 @end

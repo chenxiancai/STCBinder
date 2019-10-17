@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ViewModel : STCBaseViewModel
 
+@property (nonatomic, strong) NSString *leftButtonItemName;
+@property (nonatomic, strong) NSString *rightButtonItemName;
+
 @end
 
 NS_ASSUME_NONNULL_END

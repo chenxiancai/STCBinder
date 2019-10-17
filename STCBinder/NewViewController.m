@@ -12,6 +12,8 @@
 
 @end
 
+void pointMethod(){}
+
 @implementation NewViewController
 
 - (instancetype)initWithDelegate:(id <viewControllerProtocol>) delegate
@@ -38,41 +40,27 @@
     NSLog(@"u_longlongMethod %@",@([_delegate u_long_longMethodWithParam1:777 andParam2:3333]));
     NSLog(@"floatMethod %@",@([_delegate floatMethodWithParam1:11.11 andParam2:-888.993]));
     NSLog(@"doubleMethod %@",@([_delegate doubleMethodWithParam1:999.88988 andParam2:-88844.9983]));
-
-
-//    [_delegate voidMethod];
-//    [_delegate voidMethodWithParam1:NO andParam2:@"Param2" andParam3:YES];
-//    NSLog(@"idMethod %@",[_delegate idMethod]);
-//    NSLog(@"nsstringMethod %@",[_delegate nsstringMethod]);
-//    NSLog(@"boolMethod %d",[_delegate boolMethod]);
-//    NSLog(@"classMethod %@",NSStringFromClass([_delegate classMethod]));
-//    NSLog(@"selMethod %@",NSStringFromSelector([_delegate selMethod]));
-//    NSLog(@"charMethod %c",[_delegate charMethod]);
-//    NSLog(@"unsignedCharMethod %c",[_delegate unsignedCharMethod]);
-//    NSLog(@"shortMethod %d",[_delegate shortMethod]);
-//    NSLog(@"unsignedShortMethod %d",[_delegate unsignedShortMethod]);
-//    NSLog(@"intMethod %d",[_delegate intMethod]);
-//    NSLog(@"unsignedIntMethod %d",[_delegate unsignedIntMethod]);
-//    NSLog(@"longMethod %ld",[_delegate longMethod]);
-//    NSLog(@"unsignedLongMethod %ld",[_delegate unsignedLongMethod]);
-//    NSLog(@"longlongMethod %lld",[_delegate longlongMethod]);
-//    NSLog(@"unsignedlonglongMethod %lld",[_delegate unsignedlonglongMethod]);
-//
-//    NSLog(@"floatMethod %@",@([_delegate floatMethod]).stringValue);
-//    NSLog(@"doubleMethod %@",@([_delegate doubleMethod]).stringValue);
-//    NSLog(@"charPointMethod %s", [_delegate charPointMethod]);
-//
-//    void *b;
-//    b = [_delegate pointMethod];
-//    NSLog(@"pointMethod %i",*((int*)b));
-//
-//    NSLog(@"CGSizetMethod %@", NSStringFromCGSize([_delegate CGSizetMethod]));
-//    NSLog(@"CGPointMethod %@", NSStringFromCGPoint([_delegate CGPointMethod]));
-//    NSLog(@"CGRectMethod %@", NSStringFromCGRect([_delegate CGRectMethod]));
-//    NSLog(@"CGVectorMethod %@", NSStringFromCGVector([_delegate CGVectorMethod]));
-//    NSLog(@"CGVectorMethod %@", NSStringFromUIOffset([_delegate UIOffsetMethod]));
+    NSLog(@"ClassMethod %@",NSStringFromClass([_delegate ClassMethodWithParam1:[self class] andParam2:nil]));
+    NSLog(@"SELMethod %@",NSStringFromSelector([_delegate SELMethodWithParam1:@selector(test) andParam2:nil]));
+    NSLog(@"c_pointMethod %s",[_delegate c_pointMethodWithParam1:(char *)[@"a" UTF8String] andParam2:NULL]);
+    
+    void *b;
+    b = pointMethod;
+    NSLog(@"%i",*((int*)b));
+    NSLog(@"pointMethod %s",[_delegate pointMethodWithParam1:b andParam2:nil]);
+    NSLog(@"CGSizeMethod %@",@([_delegate CGSizeMethodWithParam1:CGSizeMake(11, 12) andParam2:CGSizeZero]));
+    NSLog(@"CGPointMethod %@",@([_delegate CGPointMethodWithParam1:CGPointMake(11.3, 12.5) andParam2:CGPointZero]));
+    NSLog(@"CGVectorMethod %@",@([_delegate CGVectorMethodWithParam1:CGVectorMake(9, 9.4) andParam2:CGVectorMake(0, 0)]));
+    NSLog(@"CGRectMethod %@",@([_delegate CGRectMethodWithParam1:CGRectMake(0, 0, 11, 88) andParam2:CGRectZero]));
+    NSLog(@"CGAffineTransformMethod %@",[NSValue valueWithCGAffineTransform:[_delegate CGAffineTransformMethodWithParam1:CGAffineTransformMake(1, 2, 3, 4, 5, 6) andParam2:CGAffineTransformIdentity]]);
+    NSLog(@"UIEdgeInsetsMethod %@",@([_delegate UIEdgeInsetsMethodWithParam1:UIEdgeInsetsMake(0, 0, 22, 44) andParam2:UIEdgeInsetsZero]));
+    NSLog(@"UIOffsetMethod %@",@([_delegate UIOffsetMethodWithParam1:UIOffsetMake(99, 44) andParam2:UIOffsetZero]));
+    NSLog(@"NSDirectionalEdgeInsetsMethod %@",@([_delegate NSDirectionalEdgeInsetsMethodWithParam1:NSDirectionalEdgeInsetsMake(0, 0, 5, 6) andParam2:NSDirectionalEdgeInsetsZero]));
+    NSLog(@"NSRangeMethod %@",[NSValue valueWithRange:[_delegate NSRangeMethodWithParam1:NSMakeRange(0, 33) andParam2:NSMakeRange(99, 33)]]);
+    NSLog(@"CATransform3DMethod %@",@([_delegate CATransform3DMethodWithParam1:CATransform3DIdentity andParam2:CATransform3DMakeRotation(0, 0, 0, 0)]));
 
 }
+
 
 
 - (void)viewDidLoad {

@@ -30,48 +30,40 @@ void testMethod(void)
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.textView =  [[UITextView alloc] initWithFrame:CGRectMake(100, 100, 100, 80)];
+    self.textView =  [[UITextView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     self.textView.backgroundColor = [UIColor greenColor];
 
-    self.textView.delegate =  (id <UITextViewDelegate>) [self.viewModel bindProtocol:STCGetProtocolName(UITextViewDelegate) withReactBlock:^id(id arg,NSString *selName) {
+//    self.textView.delegate =  (id <UITextViewDelegate>) [self.viewModel bindProtocol:STCGetProtocolName(UITextViewDelegate) withReactBlock:^id(id arg,NSString *selName) {
+//        NSLog(@"%@", arg);
+//        NSLog(@"%@", selName);
+//        return @YES;
+//    }];
+    
+    [self.viewModel updateCurrentProtocol:STCGetProtocolName(UITextViewDelegate)];
+    self.textView.delegate = (id <UITextViewDelegate>)
+    [[self.viewModel bindProtocolMethod:STCGetSeletorName(textViewShouldBeginEditing:) withReactBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
+        return @YES;
+    }] bindProtocolMethod:STCGetSeletorName(textViewDidChange:) withReactBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
         NSLog(@"%@", arg);
         NSLog(@"%@", selName);
-        return [NSNumber numberWithBool:YES];
+        return nil;
     }];
-
+    
     [self.view addSubview:self.textView];
     
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"return"
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self.viewModel
-                                                                      action:[self.viewModel reactBlock:^(id arg) {
+                                                                      action:[self.viewModel bindProperty:STCGetPropertyName(leftButtonItemName) withActionBlock:^(id  _Nonnull value, id  _Nullable target, __kindof STCBaseViewModel * _Nonnull viewModel) {
+
         [self.navigationController popViewControllerAnimated:YES];
     }]];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     self.aVC = [[NewViewController alloc] init];
     self.aVC.delegate = (id <viewControllerProtocol>)[self.viewModel bindProtocol:STCGetProtocolName(viewControllerProtocol) withReactBlock:^id(NSArray *arg, NSString *selName) {
-
-//        if ([selName isEqualToString:STCGetSeletorName(voidMethod)]) {
-//            return nil;
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(voidMethodWithParam1:andParam2:andParam3:)]) {
-//            return nil;
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(idMethod)]) {
-//            return self;
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(nsstringMethod)]) {
-//            return @"NSString";
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(boolMethod)]) {
-//            return @YES;
-//        }
         
+        NSLog(@"%@", arg);
         
         if ([selName isEqualToString:STCGetSeletorName(BOOLMethodWithParam1:andParam2:)])
         {
@@ -137,92 +129,79 @@ void testMethod(void)
         {
             return @(844488.999555);
         }
-
-
-//        if ([selName isEqualToString:STCGetSeletorName(classMethod)]) {
-//            return [self class];
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(selMethod)]) {
-//            return NSStringFromSelector(@selector(viewDidLoad));
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(charMethod)]) {
-//            char value = 0x90;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(unsignedCharMethod)]) {
-//            unsigned char value = 0x99;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(shortMethod)]) {
-//            short value = - 77;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(unsignedShortMethod)]) {
-//            unsigned short value = 88;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(intMethod)]) {
-//            int value = - 999;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(unsignedIntMethod)]) {
-//            unsigned int value = 666;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(longMethod)]) {
-//            long value = -88888;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(unsignedLongMethod)]) {
-//           unsigned long value = 777777;
-//           return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(longlongMethod)]) {
-//            long long value = -10000000;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(unsignedlonglongMethod)]) {
-//            unsigned long long value = 99999999;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(floatMethod)]) {
-//            float value = - 99.9;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(doubleMethod)]) {
-//            double value =  - 999999.99999;
-//            return @(value);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(charPointMethod)]) {
-//            char *a;
-//            a = "hello";
-//            return @(a);
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(pointMethod)]) {
-//            void *b;
-//            b = testMethod;
-//            NSLog(@"%i",*((int*)b));
-//            return (__bridge id)b;
-//        }
-//
-//        if ([selName isEqualToString:STCGetSeletorName(CGSizetMethod)]) {
-//            return @(CGSizeMake(100.0, 100.0));
-//        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(ClassMethodWithParam1:andParam2:)])
+        {
+            return [self class];
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(SELMethodWithParam1:andParam2:)])
+        {
+            return NSStringFromSelector(@selector(viewDidLoad));
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(c_pointMethodWithParam1:andParam2:)])
+        {
+            return [NSValue valueWithPointer:[@"a" UTF8String]];
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(pointMethodWithParam1:andParam2:)])
+        {
+            void *b;
+            b = testMethod;
+            NSLog(@"%i",*((int*)b));
+            return [NSValue valueWithPointer:b];
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(CGSizeMethodWithParam1:andParam2:)])
+        {
+            return @(CGSizeMake(12, 0));
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(CGPointMethodWithParam1:andParam2:)])
+        {
+            return @(CGPointMake(11, 11));
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(CGVectorMethodWithParam1:andParam2:)])
+        {
+            return @(CGVectorMake(99, 99));
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(CGRectMethodWithParam1:andParam2:)])
+        {
+            return @(CGRectMake(9, 11, 33, 77));
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(CGAffineTransformMethodWithParam1:andParam2:)])
+        {
+            return [NSValue valueWithCGAffineTransform:CGAffineTransformMake(9, 0, 8, 9, 9, 9)];
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(UIEdgeInsetsMethodWithParam1:andParam2:)])
+        {
+            return @(UIEdgeInsetsMake(9, 8, 4, 3));
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(UIEdgeInsetsMethodWithParam1:andParam2:)])
+        {
+            return @(UIOffsetZero);
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(NSDirectionalEdgeInsetsMethodWithParam1:andParam2:)])
+        {
+            return @(NSDirectionalEdgeInsetsMake(0, 9, 8, 4));
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(NSRangeMethodWithParam1:andParam2:)])
+        {
+            return  [NSValue valueWithRange:NSMakeRange(9, 4)];
+        }
+        
+        if ([selName isEqualToString:STCGetSeletorName(CATransform3DMethodWithParam1:andParam2:)])
+        {
+            return [NSValue valueWithCATransform3D:CATransform3DIdentity];
+        }
         
         return nil;
     }];

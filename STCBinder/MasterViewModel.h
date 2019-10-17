@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSString *headerName;
 @property (nonatomic, assign) BOOL uploading;
 @property (nonatomic, assign) NSInteger selectedRow;
+@property (nonatomic, assign) NSInteger cellButtonTag;
 
 - (void)fetchDataSources;
 - (void)updateIndexs;

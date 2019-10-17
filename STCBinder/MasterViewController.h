@@ -11,7 +11,7 @@
 
 @interface MasterViewController : UITableViewController
 
-@property (nonatomic, strong) MasterViewModel *tableViewModel;
+@property (nonatomic, strong) MasterViewModel *viewModel;
 
 
 @end

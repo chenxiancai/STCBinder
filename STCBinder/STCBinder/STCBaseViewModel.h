@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class STCBaseViewModel;
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^ReactBlock)(id value, id viewModel);
-typedef id (^ProtocolBlock)(id arg,NSString *selName);
-typedef void *(^VoidBlock)(id arg,NSString *selName);
+typedef void(^ReactBlock)(id value, _Nullable id target,__kindof STCBaseViewModel *viewModel);
+typedef id _Nullable (^ProtocolBlock)(id arg,NSString *selName);
 
 #define STCGetSeletorName(value) STCGetPropertyName(value)
 #define STCGetPropertyName(value) NSStringFromSelector(@selector(value))
@@ -22,44 +22,25 @@ typedef void *(^VoidBlock)(id arg,NSString *selName);
 
 - (instancetype)init;
 
-- (SEL)reactBlock:(void (^)(id arg))block;
+- (SEL)bindProperty:(NSString *)propertyName withActionBlock:(ReactBlock)block;
 
-/**
- bind viewModel property with block
- 把viewModel属性和block对象绑定
- 
- @param propertyName propertyName of viewModel
- @param block block
- */
 - (STCBaseViewModel *)bindProperty:(NSString *)propertyName
       withReactBlock:(ReactBlock)block;
 
-/**
- unbind viewModel property with block
- 把属性和block解绑
-
- @param propertyName propertyName of viewModel
- @param block  block
- */
 - (STCBaseViewModel *)unbindProperty:(NSString *)propertyName
         withReactBlock:(ReactBlock)block;
 
-/**
- 删除绑定的block
- */
 - (void)disposeAllReactBlocks;
 
 - (STCBaseViewModel *)bindProtocol:(NSString *)protocol
                     withReactBlock:(ProtocolBlock)block;
-
-- (STCBaseViewModel *)bindProtocol:(NSString *)protocol
-                         voidBlock:(VoidBlock)block;
 
 - (STCBaseViewModel *)updateCurrentProtocol:(NSString *)protocol;
 
 - (STCBaseViewModel *)bindProtocolMethod:(NSString *)method
                           withReactBlock:(ProtocolBlock)block;
 
+- (void)actionBindedProperty:(NSString *)propertyName withArg:(id)arg actionBlock:(ReactBlock)block;
 
 @end
 

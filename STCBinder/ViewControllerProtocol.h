@@ -42,6 +42,21 @@ TEST_METHOD_WITH_TYPE_WITHOUT_ARG(u_long_long)
 TEST_METHOD_WITH_TYPE_WITHOUT_ARG(float)
 TEST_METHOD_WITH_TYPE_WITHOUT_ARG(double)
 
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(Class)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(SEL)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(c_point)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(point)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(CGSize)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(CGPoint)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(CGVector)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(CGRect)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(CGAffineTransform)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(UIEdgeInsets)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(UIOffset)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(NSDirectionalEdgeInsets)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(NSRange)
+TEST_METHOD_WITH_TYPE_WITHOUT_ARG(CATransform3D)
+
 TEST_METHOD_WITH_TYPE_AND_ARG(BOOL)
 TEST_METHOD_WITH_TYPE_AND_ARG(char)
 TEST_METHOD_WITH_TYPE_AND_ARG(u_char)
@@ -56,56 +71,20 @@ TEST_METHOD_WITH_TYPE_AND_ARG(u_long_long)
 TEST_METHOD_WITH_TYPE_AND_ARG(float)
 TEST_METHOD_WITH_TYPE_AND_ARG(double)
 
-
-
-- (Class)classMethod;
-
-- (SEL)selMethod;
-
-- (char)charMethod;
-
-- (unsigned char)unsignedCharMethod;
-
-- (short)shortMethod;
-
-- (unsigned short)unsignedShortMethod;
-
-- (int)intMethod;
-
-- (unsigned int)unsignedIntMethod;
-
-- (long)longMethod;
-
-- (unsigned long)unsignedLongMethod;
-
-- (long long)longlongMethod;
-
-- (unsigned long long)unsignedlonglongMethod;
-
-- (float)floatMethod;
-
-- (double)doubleMethod;
-
-- (char *)charPointMethod;
-
-- (void *)pointMethod;
-
-- (CGSize)CGSizetMethod;
-
-- (CGPoint)CGPointMethod;
-
-- (CGVector)CGVectorMethod;
-
-- (CGRect)CGRectMethod;
-
-- (CGAffineTransform)CGAffineTransformMethod;
-
-- (UIEdgeInsets)UIEdgeInsetsMethod;
-
-- (UIOffset)UIOffsetMethod;
-
-- (NSDirectionalEdgeInsets)NSDirectionalEdgeInsetsMethod;
-
+TEST_METHOD_WITH_TYPE_AND_ARG(Class)
+TEST_METHOD_WITH_TYPE_AND_ARG(SEL)
+TEST_METHOD_WITH_TYPE_AND_ARG(c_point)
+TEST_METHOD_WITH_TYPE_AND_ARG(point)
+TEST_METHOD_WITH_TYPE_AND_ARG(CGSize)
+TEST_METHOD_WITH_TYPE_AND_ARG(CGPoint)
+TEST_METHOD_WITH_TYPE_AND_ARG(CGVector)
+TEST_METHOD_WITH_TYPE_AND_ARG(CGRect)
+TEST_METHOD_WITH_TYPE_AND_ARG(CGAffineTransform)
+TEST_METHOD_WITH_TYPE_AND_ARG(UIEdgeInsets)
+TEST_METHOD_WITH_TYPE_AND_ARG(UIOffset)
+TEST_METHOD_WITH_TYPE_AND_ARG(NSDirectionalEdgeInsets)
+TEST_METHOD_WITH_TYPE_AND_ARG(NSRange)
+TEST_METHOD_WITH_TYPE_AND_ARG(CATransform3D)
 
 @end
 
