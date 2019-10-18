@@ -38,11 +38,15 @@ void testMethod(void)
     [[[self.viewModel updateCurrentProtocol:STCGetProtocolName(UITextViewDelegate)]
       bindProtocolEvent:STCGetSeletorName(textViewShouldBeginEditing:)
          withEventBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
+        
         return @YES;
+        
     }] bindProtocolEvent:STCGetSeletorName(textViewDidChange:)
           withEventBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
+        
         NSLog(@"%@", arg);
         NSLog(@"%@", selName);
+        
         return nil;
     }];
     

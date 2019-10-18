@@ -671,20 +671,31 @@ ProtocolIMPWithArg(double, 0)
 
 @end
 
+dispatch_queue_t kvoQueue;
+
 @implementation STCBaseViewModel
+
++ (void)initialize
+{
+    if (!kvoQueue) {
+        kvoQueue = dispatch_queue_create("www.kvo.queue", DISPATCH_QUEUE_SERIAL);
+    }
+}
 
 - (void)dealloc
 {
-    for (NSString *keyPath in self.observerKeyPaths) {
-        [self removeObserver:self forKeyPath:keyPath];
-    }
-
-    self.observerKeyPaths = nil;
-    self.binderReactBlockDict = nil;
-    self.selNames = nil;
-    self.currentProtocol = nil;
-    self.binderActionSelectorDict = nil;
-    self.binderActionPropertyDict = nil;
+    dispatch_async(kvoQueue, ^{
+        for (NSString *keyPath in self.observerKeyPaths) {
+            [self removeObserver:self forKeyPath:keyPath];
+        }
+        
+        self.observerKeyPaths = nil;
+        self.binderReactBlockDict = nil;
+        self.selNames = nil;
+        self.currentProtocol = nil;
+        self.binderActionSelectorDict = nil;
+        self.binderActionPropertyDict = nil;
+    });
 
     NSLog(@"STCBaseViewModel dealloc");
 }
@@ -700,31 +711,35 @@ ProtocolIMPWithArg(double, 0)
 }
 
 - (SEL)bindProperty:(NSString *)propertyName withActionBlock:(ReactBlock)block {
+            
     NSString *selName = [NSString stringWithFormat:@"selector_%p:", block];
     [self.selNames addObject:selName];
     SEL sel = NSSelectorFromString(selName);
     class_addMethod([self class], sel, (IMP)selectorImp, "v@:@");
     objc_setAssociatedObject(self, sel, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     
-    [self.binderActionSelectorDict addEntriesFromDictionary:@{selName: propertyName}];
-    if ([self.binderActionPropertyDict objectForKey:propertyName]) {
-        NSMutableArray *sels = [self.binderActionPropertyDict objectForKey:propertyName];
-        [sels addObject:[selName copy]];
-    } else {
-        NSMutableArray *sels = [NSMutableArray arrayWithObject:[selName copy]];
-        [self.binderActionPropertyDict addEntriesFromDictionary:@{propertyName: sels}];
-        BOOL exist = NO;
-        for (NSString *name in self.observerKeyPaths) {
-            if ([name isEqualToString:propertyName]) {
-                exist = YES;
-                break;
+    dispatch_async(kvoQueue, ^{
+        [self.binderActionSelectorDict addEntriesFromDictionary:@{selName: propertyName}];
+        if ([self.binderActionPropertyDict objectForKey:propertyName]) {
+            NSMutableArray *sels = [self.binderActionPropertyDict objectForKey:propertyName];
+            [sels addObject:[selName copy]];
+        } else {
+            NSMutableArray *sels = [NSMutableArray arrayWithObject:[selName copy]];
+            [self.binderActionPropertyDict addEntriesFromDictionary:@{propertyName: sels}];
+            BOOL exist = NO;
+            for (NSString *name in self.observerKeyPaths) {
+                if ([name isEqualToString:propertyName]) {
+                    exist = YES;
+                    break;
+                }
+            }
+            if (!exist) {
+                [self.observerKeyPaths addObject:propertyName];
+                [self addObserver:self forKeyPath:propertyName options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
             }
         }
-        if (!exist) {
-            [self.observerKeyPaths addObject:propertyName];
-            [self addObserver:self forKeyPath:propertyName options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-        }
-    }
+    });
+    
     return sel;
 }
 
@@ -740,11 +755,13 @@ static void selectorImp(id self, SEL _cmd, id arg) {
 {
     self = [super init];
     if (self) {
-        self.binderReactBlockDict = [NSMutableDictionary dictionary];
-        self.observerKeyPaths = [NSMutableArray array];
-        self.selNames = [NSMutableArray array];
-        self.binderActionSelectorDict = [NSMutableDictionary dictionary];
-        self.binderActionPropertyDict = [NSMutableDictionary dictionary];
+        dispatch_async(kvoQueue, ^{
+            self.binderReactBlockDict = [NSMutableDictionary dictionary];
+            self.observerKeyPaths = [NSMutableArray array];
+            self.selNames = [NSMutableArray array];
+            self.binderActionSelectorDict = [NSMutableDictionary dictionary];
+            self.binderActionPropertyDict = [NSMutableDictionary dictionary];
+        });
     }
     return self;
 }
@@ -754,24 +771,26 @@ static void selectorImp(id self, SEL _cmd, id arg) {
 - (STCBaseViewModel *)bindProperty:(NSString *)propertyName withReactBlock:(ReactBlock)block
 {
     if (propertyName && block) {
-        if ([self.binderReactBlockDict objectForKey:propertyName]) {
-            NSMutableArray *blockObjects = [self.binderReactBlockDict objectForKey:propertyName];
-            [blockObjects addObject:[block copy]];
-        } else {
-            NSMutableArray *blockObjects = [NSMutableArray arrayWithObject:[block copy]];
-            [self.binderReactBlockDict addEntriesFromDictionary:@{propertyName: blockObjects}];
-            BOOL exist = NO;
-            for (NSString *name in self.observerKeyPaths) {
-                if ([name isEqualToString:propertyName]) {
-                    exist = YES;
-                    break;
+        dispatch_async(kvoQueue, ^{
+            if ([self.binderReactBlockDict objectForKey:propertyName]) {
+                NSMutableArray *blockObjects = [self.binderReactBlockDict objectForKey:propertyName];
+                [blockObjects addObject:[block copy]];
+            } else {
+                NSMutableArray *blockObjects = [NSMutableArray arrayWithObject:[block copy]];
+                [self.binderReactBlockDict addEntriesFromDictionary:@{propertyName: blockObjects}];
+                BOOL exist = NO;
+                for (NSString *name in self.observerKeyPaths) {
+                    if ([name isEqualToString:propertyName]) {
+                        exist = YES;
+                        break;
+                    }
+                }
+                if (!exist) {
+                    [self.observerKeyPaths addObject:propertyName];
+                    [self addObserver:self forKeyPath:propertyName options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
                 }
             }
-            if (!exist) {
-                [self.observerKeyPaths addObject:propertyName];
-                [self addObserver:self forKeyPath:propertyName options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-            }
-        }
+        });
     }
     return self;
 }
@@ -779,29 +798,31 @@ static void selectorImp(id self, SEL _cmd, id arg) {
 - (STCBaseViewModel *)unbindProperty:(NSString *)propertyName withReactBlock:(ReactBlock)block
 {
     if (propertyName && block) {
-        if ([self.binderReactBlockDict objectForKey:propertyName]) {
-            NSMutableArray *blockObjects = [self.binderReactBlockDict objectForKey:propertyName];
-            for (ReactBlock reactBlock in blockObjects) {
-                if (reactBlock == block) {
-                    [blockObjects removeObject:reactBlock];
-                    break;
+        dispatch_async(kvoQueue, ^{
+            if ([self.binderReactBlockDict objectForKey:propertyName]) {
+                NSMutableArray *blockObjects = [self.binderReactBlockDict objectForKey:propertyName];
+                for (ReactBlock reactBlock in blockObjects) {
+                    if (reactBlock == block) {
+                        [blockObjects removeObject:reactBlock];
+                        break;
+                    }
                 }
-            }
-            if (blockObjects.count == 0) {
-                [self.binderReactBlockDict removeObjectForKey:propertyName];
-                [self removeObserver:self forKeyPath:propertyName];
-                
-                NSArray *sels = [self.binderActionPropertyDict objectForKey:propertyName];
-                if (!sels) {
-                    for (NSString *keyPath in self.observerKeyPaths) {
-                        if ([keyPath isEqualToString:propertyName]) {
-                            [self.observerKeyPaths removeObject:keyPath];
-                            break;
+                if (blockObjects.count == 0) {
+                    [self.binderReactBlockDict removeObjectForKey:propertyName];
+                    [self removeObserver:self forKeyPath:propertyName];
+                    
+                    NSArray *sels = [self.binderActionPropertyDict objectForKey:propertyName];
+                    if (!sels) {
+                        for (NSString *keyPath in self.observerKeyPaths) {
+                            if ([keyPath isEqualToString:propertyName]) {
+                                [self.observerKeyPaths removeObject:keyPath];
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
+        });
     }
     
     return self;
@@ -1008,24 +1029,28 @@ static void selectorImp(id self, SEL _cmd, id arg) {
                        context:(void *)context
 {
     if (object == self) {
-        for (NSString *propertyName in self.observerKeyPaths) {
-            if ([keyPath isEqualToString:propertyName]) {
-                id value = [self valueForKey:propertyName];
-                NSArray *reactBlocks = [[self.binderReactBlockDict objectForKey:propertyName] copy];
-                for (ReactBlock block in reactBlocks) {
-                    if (block) {
-                        block(value, nil, self);
+        dispatch_async(kvoQueue, ^{
+            for (NSString *propertyName in self.observerKeyPaths) {
+                if ([keyPath isEqualToString:propertyName]) {
+                    id value = [self valueForKey:propertyName];
+                    NSArray *reactBlocks = [[self.binderReactBlockDict objectForKey:propertyName] copy];
+                    for (ReactBlock block in reactBlocks) {
+                        if (block) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                block(value, nil, self);
+                            });
+                        }
                     }
-                }
-                NSArray *sels = [[self.binderActionPropertyDict objectForKey:propertyName] copy];
-                for (NSString *sel in sels) {
-                    ReactBlock block = objc_getAssociatedObject(self, NSSelectorFromString(sel));
-                    if (block) {
-                        block(value, nil, self);
+                    NSArray *sels = [[self.binderActionPropertyDict objectForKey:propertyName] copy];
+                    for (NSString *sel in sels) {
+                        ReactBlock block = objc_getAssociatedObject(self, NSSelectorFromString(sel));
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            block(value, nil, self);
+                        });
                     }
                 }
             }
-        }
+        });
     }
 }
 
