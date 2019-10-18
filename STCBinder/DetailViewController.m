@@ -8,7 +8,6 @@
 
 #import "DetailViewController.h"
 #import "ViewController.h"
-#import "DetailViewModel.h"
 
 @interface DetailViewController ()
 
@@ -29,7 +28,8 @@
     [[UIBarButtonItem alloc] initWithTitle:@"back"
                                      style:UIBarButtonItemStylePlain
                                     target:self.viewModel
-                                    action:[self.viewModel bindProperty:STCGetPropertyName(cellButtonTag) withActionBlock:^(id  _Nonnull value, id target, __kindof STCBaseViewModel * _Nonnull viewModel) {
+                                    action:[self.viewModel bindProperty:STCNoStateProperty
+                                                        withActionBlock:^(id  _Nonnull value, id target, __kindof STCBaseViewModel * _Nonnull viewModel) {
         [self.navigationController popViewControllerAnimated:YES];
     }]];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
@@ -38,7 +38,8 @@
     [[UIBarButtonItem alloc] initWithTitle:@"go"
                                      style:UIBarButtonItemStylePlain
                                     target:self.viewModel
-                                    action:[self.viewModel bindProperty:STCGetPropertyName(cellButtonTag) withActionBlock:^(id  _Nonnull value, id target,__kindof STCBaseViewModel * _Nonnull viewModel) {
+                                    action:[self.viewModel bindProperty:STCNoStateProperty
+                                                        withActionBlock:^(id  _Nonnull value, id target,__kindof STCBaseViewModel * _Nonnull viewModel) {
         ViewController *vc = [[ViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }]];
@@ -46,12 +47,29 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    if (![self.navigationController.viewControllers containsObject:self]) {
+        [self.viewModel disposeAllReactBlocks];
+    }
+}
+
+#pragma mark - viewModelInitialize
+
+-(void)viewModelInitialize
+{
+    
 }
 
 #pragma mark - ViewModel
 
+- (DetailViewModel *)viewModel
+{
+    if (!_viewModel) {
+        _viewModel = [[DetailViewModel alloc] init];
+    }
+    return _viewModel;
+}
 
 @end

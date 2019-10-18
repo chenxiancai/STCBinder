@@ -8,6 +8,11 @@
 
 #import "ViewModel.h"
 
-@implementation ViewModel
+@implementation ViewModel 
+
+- (void)actionBindedProperty:(NSString *)property withTarget:(id)target actionBlock:(ReactBlock)block
+{
+    [super actionBindedProperty:property withTarget:target actionBlock:block];
+}
 
 @end

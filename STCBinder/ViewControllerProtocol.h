@@ -25,7 +25,7 @@ typedef char * c_point;
 #define TEST_METHOD_WITH_TYPE_WITHOUT_ARG(type)\
 - (type)type##Method;
 
-
+//测试核心功能是否正常
 @protocol viewControllerProtocol <NSObject>
 
 TEST_METHOD_WITH_TYPE_WITHOUT_ARG(BOOL)

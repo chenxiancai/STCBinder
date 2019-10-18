@@ -10,12 +10,9 @@
 
 @implementation DetailViewModel
 
-- (void)actionBindedProperty:(NSString *)property withArg:(id)arg actionBlock:(ReactBlock)block
+- (void)actionBindedProperty:(NSString *)property withTarget:(id)target actionBlock:(ReactBlock)block
 {
-    NSLog(@"arg :%@", arg);
-    if (arg) {
-        [super actionBindedProperty:property withArg:arg actionBlock:block];
-    }
+    [super actionBindedProperty:property withTarget:target actionBlock:block];
 }
 
 @end

@@ -24,7 +24,8 @@
         self.headerName = nil;
         self.uploading = NO;
         self.selectedRow = 0;
-        self.cellButtonTag = 1000;
+        self.actionName = nil;
+        self.alertMessage = @"";
     }
     return self;
 }
@@ -53,6 +54,7 @@
         NSMutableArray *oldModels = [NSMutableArray arrayWithArray:self.tableDataSources];
         [oldModels addObjectsFromArray:array];
         
+        // 模拟有网络下载
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.tableDataSources = [self updateIndexWithDataSource:[NSArray arrayWithArray:oldModels]];
             self.headerName = [NSString stringWithFormat:@"total count: %@", @(self.tableDataSources.count)];
@@ -74,7 +76,7 @@
     self.tableDataSources = [self updateIndexWithDataSource:[NSArray arrayWithArray:self.tableDataSources]];
 }
 
-- (void)removeWithIndexPath:(NSIndexPath *)indexPath
+- (void)removeDataWithIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *dataSources = [NSMutableArray arrayWithArray:self.tableDataSources];
     [dataSources removeObjectAtIndex:indexPath.row];
@@ -82,11 +84,24 @@
     self.headerName = [NSString stringWithFormat:@"total count :%@", @(self.tableDataSources.count)];
 }
 
-- (void)actionBindedProperty:(NSString *)property withArg:(id)arg actionBlock:(ReactBlock)block
+- (void)actionBindedProperty:(NSString *)property withTarget:(id)target actionBlock:(ReactBlock)block
 {
-    NSLog(@"arg :%@", arg);
-    if (arg) {
-        [super actionBindedProperty:property withArg:arg actionBlock:block];
+    [super actionBindedProperty:property withTarget:target actionBlock:block];
+    
+    if ([property isEqualToString:STCGetSeletorName(actionName)]) {
+        self.uploading = !self.uploading;
+        if (self.uploading) {
+            self.actionName = @"push";
+        } else {
+            self.actionName = @"upload";
+        }
+        return;
+    }
+    
+    if ([property isEqualToString:STCGetSeletorName(alertMessage)]) {
+        [self fetchDataSources];
+        self.alertMessage = @"asynchronous fetching...";
+        return;
     }
 }
 

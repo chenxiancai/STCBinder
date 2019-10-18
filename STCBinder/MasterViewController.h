@@ -13,6 +13,5 @@
 
 @property (nonatomic, strong) MasterViewModel *viewModel;
 
-
 @end
 

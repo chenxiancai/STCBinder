@@ -33,17 +33,14 @@ void testMethod(void)
     self.textView =  [[UITextView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     self.textView.backgroundColor = [UIColor greenColor];
 
-//    self.textView.delegate =  (id <UITextViewDelegate>) [self.viewModel bindProtocol:STCGetProtocolName(UITextViewDelegate) withReactBlock:^id(id arg,NSString *selName) {
-//        NSLog(@"%@", arg);
-//        NSLog(@"%@", selName);
-//        return @YES;
-//    }];
-    
-    [self.viewModel updateCurrentProtocol:STCGetProtocolName(UITextViewDelegate)];
+    // 链式写法实现事件代理回调, 增加局部代码的紧凑度
     self.textView.delegate = (id <UITextViewDelegate>)
-    [[self.viewModel bindProtocolMethod:STCGetSeletorName(textViewShouldBeginEditing:) withReactBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
+    [[[self.viewModel updateCurrentProtocol:STCGetProtocolName(UITextViewDelegate)]
+      bindProtocolEvent:STCGetSeletorName(textViewShouldBeginEditing:)
+         withEventBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
         return @YES;
-    }] bindProtocolMethod:STCGetSeletorName(textViewDidChange:) withReactBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
+    }] bindProtocolEvent:STCGetSeletorName(textViewDidChange:)
+          withEventBlock:^id _Nullable(id  _Nonnull arg, NSString * _Nonnull selName) {
         NSLog(@"%@", arg);
         NSLog(@"%@", selName);
         return nil;
@@ -51,17 +48,23 @@ void testMethod(void)
     
     [self.view addSubview:self.textView];
     
-    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"return"
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self.viewModel
-                                                                      action:[self.viewModel bindProperty:STCGetPropertyName(leftButtonItemName) withActionBlock:^(id  _Nonnull value, id  _Nullable target, __kindof STCBaseViewModel * _Nonnull viewModel) {
+    
+    UIBarButtonItem *leftButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle:@"return"
+                                     style:UIBarButtonItemStylePlain
+                                    target:self.viewModel
+                                    action:[self.viewModel bindProperty:STCNoStateProperty
+                                                        withActionBlock:^(id  _Nonnull value, id  _Nullable target, __kindof STCBaseViewModel * _Nonnull viewModel) {
 
         [self.navigationController popViewControllerAnimated:YES];
     }]];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
+    //绑定代理协议所有方法测试代码
     self.aVC = [[NewViewController alloc] init];
-    self.aVC.delegate = (id <viewControllerProtocol>)[self.viewModel bindProtocol:STCGetProtocolName(viewControllerProtocol) withReactBlock:^id(NSArray *arg, NSString *selName) {
+    self.aVC.delegate = (id <viewControllerProtocol>)
+    [self.viewModel bindProtocol:STCGetProtocolName(viewControllerProtocol)
+                  withEventBlock:^id(NSArray *arg, NSString *selName) {
         
         NSLog(@"%@", arg);
         
@@ -223,6 +226,5 @@ void testMethod(void)
     }
     return _viewModel;
 }
-
 
 @end

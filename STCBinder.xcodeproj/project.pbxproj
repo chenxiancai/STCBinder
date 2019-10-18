@@ -11,7 +11,6 @@
 		5F0A18082326CDDE004C3B8F /* ViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F0A18072326CDDE004C3B8F /* ViewModel.m */; };
 		5F10E9B8234B8866005AEC27 /* NewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F10E9B7234B8866005AEC27 /* NewViewController.m */; };
 		5F2049AF1F7752D90062F376 /* STCBaseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049AE1F7752D90062F376 /* STCBaseViewModel.m */; };
-		5F2049B31F77534D0062F376 /* STCProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049B21F77534D0062F376 /* STCProxy.m */; };
 		5F2049B61F7771060062F376 /* MasterViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049B51F7771060062F376 /* MasterViewModel.m */; };
 		5F2049BD1F7778600062F376 /* CellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049BC1F7778600062F376 /* CellModel.m */; };
 		5F2049C01F7785080062F376 /* MasterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F2049BF1F7785080062F376 /* MasterTableViewCell.m */; };
@@ -50,8 +49,6 @@
 		5F10E9B7234B8866005AEC27 /* NewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewViewController.m; sourceTree = "<group>"; };
 		5F2049AD1F7752D90062F376 /* STCBaseViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STCBaseViewModel.h; sourceTree = "<group>"; };
 		5F2049AE1F7752D90062F376 /* STCBaseViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STCBaseViewModel.m; sourceTree = "<group>"; };
-		5F2049B11F77534D0062F376 /* STCProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STCProxy.h; sourceTree = "<group>"; };
-		5F2049B21F77534D0062F376 /* STCProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STCProxy.m; sourceTree = "<group>"; };
 		5F2049B41F7771060062F376 /* MasterViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewModel.h; sourceTree = "<group>"; };
 		5F2049B51F7771060062F376 /* MasterViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewModel.m; sourceTree = "<group>"; };
 		5F2049BB1F7778600062F376 /* CellModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CellModel.h; sourceTree = "<group>"; };
@@ -189,8 +186,6 @@
 			children = (
 				5F2049AD1F7752D90062F376 /* STCBaseViewModel.h */,
 				5F2049AE1F7752D90062F376 /* STCBaseViewModel.m */,
-				5F2049B11F77534D0062F376 /* STCProxy.h */,
-				5F2049B21F77534D0062F376 /* STCProxy.m */,
 			);
 			path = STCBinder;
 			sourceTree = "<group>";
@@ -390,7 +385,6 @@
 				5F2049AF1F7752D90062F376 /* STCBaseViewModel.m in Sources */,
 				5F6BFBAA1F7104DE0058C2F9 /* main.m in Sources */,
 				5F2049B61F7771060062F376 /* MasterViewModel.m in Sources */,
-				5F2049B31F77534D0062F376 /* STCProxy.m in Sources */,
 				5F7ED8B12358A0330055BBAA /* DetailViewModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

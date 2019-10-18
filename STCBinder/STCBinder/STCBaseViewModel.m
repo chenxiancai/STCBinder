@@ -172,7 +172,7 @@ typedef char * c_point;
 #define ProtocolIMPWithoutArg(returnType, defautValue)   \
 static returnType impWithNoArgAndReturnType_##returnType(id self, SEL _cmd) {\
     NSString *selName = NSStringFromSelector(_cmd);\
-    NSNumber * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    NSNumber * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
     if (block) {\
         NSNumber *value = block(nil,selName);\
         char returnValueType[255];\
@@ -298,7 +298,7 @@ static returnType impWithArgAndReturnType_##returnType(id self, SEL _cmd, ...) {
 #define ProtocolStructIMPWithoutArg_2Value(returnType)   \
 static returnType impWithNoArgAndReturnType_##returnType(id self, SEL _cmd) {\
     NSString *selName = NSStringFromSelector(_cmd);\
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    NSValue * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
     if (block) {\
         NSValue *value = block(nil,selName);\
         return [value returnType##Value];\
@@ -310,7 +310,7 @@ static returnType impWithNoArgAndReturnType_##returnType(id self, SEL _cmd) {\
 #define ProtocolStructIMPWithoutArg_4Value(returnType)   \
 static returnType impWithNoArgAndReturnType_##returnType(id self, SEL _cmd) {\
     NSString *selName = NSStringFromSelector(_cmd);\
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    NSValue * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
     if (block) {\
         NSValue *value = block(nil,selName);\
         return [value returnType##Value];\
@@ -322,7 +322,7 @@ static returnType impWithNoArgAndReturnType_##returnType(id self, SEL _cmd) {\
 #define ProtocolStructIMPWithoutArg_6Value(returnType)   \
 static returnType impWithNoArgAndReturnType_##returnType(id self, SEL _cmd) {\
     NSString *selName = NSStringFromSelector(_cmd);\
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
+    NSValue * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);\
     if (block) {\
         NSValue *value = block(nil,selName);\
         return [value returnType##Value];\
@@ -365,7 +365,7 @@ static NSDirectionalEdgeInsets impWithArgAndReturnType_NSDirectionalEdgeInsets(i
 static NSDirectionalEdgeInsets impWithNoArgAndReturnType_NSDirectionalEdgeInsets(id self, SEL _cmd)API_AVAILABLE(ios(11.0),tvos(11.0),watchos(4.0))
 {
     NSString *selName = NSStringFromSelector(_cmd);
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(NSArray* params, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         NSValue *value = block(nil,selName);
         return [value directionalEdgeInsetsValue];
@@ -393,7 +393,7 @@ static NSRange impWithArgAndReturnType_NSRange(id self, SEL _cmd, ...)
 static NSRange impWithNoArgAndReturnType_NSRange(id self, SEL _cmd)
 {
     NSString *selName = NSStringFromSelector(_cmd);
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         NSValue *value = block(nil,selName);
         return [value rangeValue];
@@ -419,7 +419,7 @@ static CATransform3D impWithArgAndReturnType_CATransform3D(id self, SEL _cmd, ..
 static CATransform3D impWithNoArgAndReturnType_CATransform3D(id self, SEL _cmd)
 {
     NSString *selName = NSStringFromSelector(_cmd);
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         NSValue *value = block(nil,selName);
         return [value CATransform3DValue];
@@ -434,12 +434,14 @@ static void impWithArgAndReturnType_void(id self, SEL _cmd, ...)
     NSMutableArray *params = [NSMutableArray array];
     GET_ARGS
     void (^block)(NSArray *arg,NSString *selName) = objc_getAssociatedObject(self, _cmd);
-    if (block) block(params,selName);
+    if (block) {
+        block(params,selName);
+    }
 }
 
 static void impWithNoArgAndReturnType_void(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    void (^block)(id arg,NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    void (^block)(NSArray *arg ,NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) block(nil,selName);
 }
 
@@ -457,7 +459,7 @@ static id impWithArgAndReturnType_id(id self, SEL _cmd, ...) {
 
 static id impWithNoArgAndReturnType_id(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    id (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    id (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         return  block(nil,selName);
     } else {
@@ -479,7 +481,7 @@ static Class impWithArgAndReturnType_Class(id self, SEL _cmd, ...) {
 
 static Class impWithNoArgAndReturnType_Class(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    id (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    id (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         return block(nil,selName);
     } else {
@@ -502,7 +504,7 @@ static SEL impWithArgAndReturnType_SEL(id self, SEL _cmd, ...) {
 
 static SEL impWithNoArgAndReturnType_SEL(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    id (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    id (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         NSString *value =  block(nil,selName);
         return NSSelectorFromString(value);
@@ -526,7 +528,7 @@ static point impWithArgAndReturnType_point(id self, SEL _cmd, ...) {
 
 static point impWithNoArgAndReturnType_point(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         NSValue *value = block(nil,selName);
         return [value pointerValue];
@@ -550,7 +552,7 @@ static c_point impWithArgAndReturnType_c_point(id self, SEL _cmd, ...) {
 
 static c_point impWithNoArgAndReturnType_c_point(id self, SEL _cmd) {
     NSString *selName = NSStringFromSelector(_cmd);
-    NSValue * (^block)(id arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
+    NSValue * (^block)(NSArray *arg, NSString *selName) = objc_getAssociatedObject(self, _cmd);
     if (block) {
         NSValue *value = block(nil,selName);
         return [value pointerValue];
@@ -660,6 +662,7 @@ ProtocolIMPWithArg(double, 0)
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<ReactBlock> *> *binderReactBlockDict;
 @property (nonatomic, strong) NSMutableArray<NSString *> *observerKeyPaths;
+
 @property (nonatomic, strong) NSMutableArray<NSString *> *selNames;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *binderActionSelectorDict;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray <NSString *> *>*binderActionPropertyDict;
@@ -675,13 +678,14 @@ ProtocolIMPWithArg(double, 0)
     for (NSString *keyPath in self.observerKeyPaths) {
         [self removeObserver:self forKeyPath:keyPath];
     }
+
     self.observerKeyPaths = nil;
     self.binderReactBlockDict = nil;
     self.selNames = nil;
     self.currentProtocol = nil;
     self.binderActionSelectorDict = nil;
     self.binderActionPropertyDict = nil;
-    
+
     NSLog(@"STCBaseViewModel dealloc");
 }
 
@@ -701,8 +705,8 @@ ProtocolIMPWithArg(double, 0)
     SEL sel = NSSelectorFromString(selName);
     class_addMethod([self class], sel, (IMP)selectorImp, "v@:@");
     objc_setAssociatedObject(self, sel, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self.binderActionSelectorDict addEntriesFromDictionary:@{selName: propertyName}];
     
+    [self.binderActionSelectorDict addEntriesFromDictionary:@{selName: propertyName}];
     if ([self.binderActionPropertyDict objectForKey:propertyName]) {
         NSMutableArray *sels = [self.binderActionPropertyDict objectForKey:propertyName];
         [sels addObject:[selName copy]];
@@ -728,7 +732,7 @@ static void selectorImp(id self, SEL _cmd, id arg) {
     ReactBlock block = objc_getAssociatedObject(self, _cmd);
     if (block) {
         NSString *propertyName = [[(STCBaseViewModel *)self binderActionSelectorDict] objectForKey:NSStringFromSelector(_cmd)];
-        [self actionBindedProperty:propertyName withArg:arg actionBlock:block];
+        [self actionBindedProperty:propertyName withTarget:arg actionBlock:block];
     }
 }
 
@@ -786,13 +790,16 @@ static void selectorImp(id self, SEL _cmd, id arg) {
             if (blockObjects.count == 0) {
                 [self.binderReactBlockDict removeObjectForKey:propertyName];
                 [self removeObserver:self forKeyPath:propertyName];
-                for (NSString *keyPath in self.observerKeyPaths) {
-                    if ([keyPath isEqualToString:propertyName]) {
-                        [self.observerKeyPaths removeObject:keyPath];
-                        break;
+                
+                NSArray *sels = [self.binderActionPropertyDict objectForKey:propertyName];
+                if (!sels) {
+                    for (NSString *keyPath in self.observerKeyPaths) {
+                        if ([keyPath isEqualToString:propertyName]) {
+                            [self.observerKeyPaths removeObject:keyPath];
+                            break;
+                        }
                     }
                 }
-                
             }
         }
     }
@@ -801,7 +808,7 @@ static void selectorImp(id self, SEL _cmd, id arg) {
 }
 
 - (STCBaseViewModel *)bindProtocol:(NSString *)protocol
-                    withReactBlock:(ProtocolBlock)block;
+                    withEventBlock:(EventBlock)block;
 {
     Protocol *pro = NSProtocolFromString(protocol);
     __block unsigned int methodCount = 0;
@@ -811,7 +818,7 @@ static void selectorImp(id self, SEL _cmd, id arg) {
             struct objc_method_description description = method_description_list[i];
             NSLog(@"name:%@ type:%@",NSStringFromSelector(description.name),[NSString stringWithUTF8String:description.types]);
             
-            [self protocolBlock:block withSelectorName:NSStringFromSelector(description.name) types:[NSString stringWithUTF8String:description.types]];
+            [self EventBlock:block withSelectorName:NSStringFromSelector(description.name) types:[NSString stringWithUTF8String:description.types]];
         }
         free(method_description_list);
     };
@@ -823,7 +830,7 @@ static void selectorImp(id self, SEL _cmd, id arg) {
     return self;
 }
 
-- (SEL)protocolBlock:(ProtocolBlock)block
+- (SEL)EventBlock:(EventBlock)block
     withSelectorName:(NSString *)selName
                types:(NSString *)types {
     
@@ -954,8 +961,8 @@ static void selectorImp(id self, SEL _cmd, id arg) {
     return self;
 }
 
-- (STCBaseViewModel *)bindProtocolMethod:(NSString *)method
-                          withReactBlock:(ProtocolBlock)block
+- (STCBaseViewModel *)bindProtocolEvent:(NSString *)method
+                         withEventBlock:(EventBlock)block
 {
     if (!self.currentProtocol) {
         return self;
@@ -971,7 +978,7 @@ static void selectorImp(id self, SEL _cmd, id arg) {
             NSLog(@"name:%@ type:%@",NSStringFromSelector(description.name),[NSString stringWithUTF8String:description.types]);
             if ([NSStringFromSelector(description.name) isEqualToString:method]) {
                 isExits = YES;
-                [self protocolBlock:block withSelectorName:NSStringFromSelector(description.name) types:[NSString stringWithUTF8String:description.types]];
+                [self EventBlock:block withSelectorName:NSStringFromSelector(description.name) types:[NSString stringWithUTF8String:description.types]];
                 break;
             }
         }
@@ -1000,31 +1007,37 @@ static void selectorImp(id self, SEL _cmd, id arg) {
                         change:(NSDictionary<NSKeyValueChangeKey,id> *)change
                        context:(void *)context
 {
-    for (NSString *propertyName in self.observerKeyPaths) {
-        if ([keyPath isEqualToString:propertyName]) {
-            id value = [self valueForKey:propertyName];
-            NSArray *reactBlocks = [[self.binderReactBlockDict objectForKey:propertyName] copy];
-            for (ReactBlock block in reactBlocks) {
-                if (block) {
-                    block(value, nil, self);
+    if (object == self) {
+        for (NSString *propertyName in self.observerKeyPaths) {
+            if ([keyPath isEqualToString:propertyName]) {
+                id value = [self valueForKey:propertyName];
+                NSArray *reactBlocks = [[self.binderReactBlockDict objectForKey:propertyName] copy];
+                for (ReactBlock block in reactBlocks) {
+                    if (block) {
+                        block(value, nil, self);
+                    }
                 }
-            }
-            NSArray *sels = [[self.binderActionPropertyDict objectForKey:propertyName] copy];
-            for (NSString *sel in sels) {
-                ReactBlock block = objc_getAssociatedObject(self, NSSelectorFromString(sel));
-                if (block) {
-                    block(value, nil, self);
+                NSArray *sels = [[self.binderActionPropertyDict objectForKey:propertyName] copy];
+                for (NSString *sel in sels) {
+                    ReactBlock block = objc_getAssociatedObject(self, NSSelectorFromString(sel));
+                    if (block) {
+                        block(value, nil, self);
+                    }
                 }
             }
         }
     }
 }
 
-- (void)actionBindedProperty:(NSString *)propertyName withArg:(id)arg actionBlock:(ReactBlock)block
+#pragma mark - sub Inherit method
+
+- (void)actionBindedProperty:(NSString *)propertyName
+                  withTarget:(id)target
+                 actionBlock:(ReactBlock)block
 {
-    if (block) {
+    if (block && [propertyName isEqualToString:STCNoStateProperty]) {
         id value = [self valueForKey:propertyName];
-        block(value, arg, self);
+        block(value, target, self);
     }
 }
 

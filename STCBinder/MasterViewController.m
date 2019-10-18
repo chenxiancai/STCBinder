@@ -28,29 +28,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.tableView.dataSource = self;
-    self.tableView.delegate = self;
     [self.tableView registerClass:[MasterTableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
     self.tableView.tableHeaderView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
+    
     UIBarButtonItem *rightButtonItem =
     [[UIBarButtonItem alloc] initWithTitle:@"upload"
                                      style:UIBarButtonItemStylePlain
                                     target:self.viewModel
-                                    action:[self.viewModel bindProperty:STCGetPropertyName(cellButtonTag) withActionBlock:^(id _Nonnull value, id arg, __kindof STCBaseViewModel * _Nonnull viewModel) {
-   
-        self.viewModel.uploading = !self.viewModel.uploading;
-        if (self.viewModel.uploading) {
-            [self.navigationItem.rightBarButtonItem setTitle:@"Push"];
-            if ([self isKindOfClass:[DetailViewController class]]){
-                [self.navigationItem.leftBarButtonItem setTitle:@"Pop"];
-            }
-        } else {
-            [self.navigationItem.rightBarButtonItem setTitle:@"upload"];
-            if ([self isKindOfClass:[DetailViewController class]]){
-                [self.navigationItem.leftBarButtonItem setTitle:@"fetch"];
-            }
-        }
-        
+                                    action:[self.viewModel bindProperty:STCGetPropertyName(actionName)
+                                                        withActionBlock:^(id _Nonnull value, id arg, __kindof STCBaseViewModel * _Nonnull viewModel) {
+        [self.navigationItem.rightBarButtonItem setTitle:value];
     }]];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
@@ -58,22 +45,20 @@
     [[UIBarButtonItem alloc] initWithTitle:@"fetch"
                                      style:UIBarButtonItemStylePlain
                                     target:self.viewModel
-                                    action:[self.viewModel bindProperty:STCGetPropertyName(cellButtonTag) withActionBlock:^(id  _Nonnull value,id arg , __kindof STCBaseViewModel * _Nonnull viewModel) {
-
-        if ([self isKindOfClass:[DetailViewController class]] && self.viewModel.uploading) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            [self.viewModel fetchDataSources];
-            if (self.alert) {
-                [self.alert dismissViewControllerAnimated:NO completion:nil];
-            }
-            self.alert = [UIAlertController alertControllerWithTitle:nil message:@"asynchronous fetching..." preferredStyle:UIAlertControllerStyleAlert];
-            [self presentViewController:self.alert animated:YES completion:^{
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.alert dismissViewControllerAnimated:YES completion:nil];
-                });
-            }];
+                                    action:[self.viewModel bindProperty:STCGetPropertyName(alertMessage)
+                                                        withActionBlock:^(id  _Nonnull value,id arg , __kindof STCBaseViewModel * _Nonnull viewModel) {
+        if (self.alert) {
+            [self.alert dismissViewControllerAnimated:NO completion:nil];
         }
+        self.alert = [UIAlertController alertControllerWithTitle:nil
+                                                         message:value
+                                                  preferredStyle:UIAlertControllerStyleAlert];
+        [self presentViewController:self.alert animated:YES
+                         completion:^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.alert dismissViewControllerAnimated:YES completion:nil];
+            });
+        }];
     }]];
     
     self.navigationItem.leftBarButtonItem = leftButtonItem;
@@ -88,22 +73,29 @@
     }
 }
 
+#pragma mark - viewModelInitialize
+
 -(void)viewModelInitialize
 {
-    [self.viewModel bindProperty:STCGetPropertyName(headerName) withReactBlock:^(id value, id arg, id viewModel) {
+    [self.viewModel bindProperty:STCGetPropertyName(headerName)
+                  withReactBlock:^(id value, id arg, id viewModel) {
+        
         UILabel *label = (UILabel *)self.tableView.tableHeaderView;
         label.text = value;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
-        NSLog(@"react block 1!");
+        NSLog(@"headerName react block 1!");
     }];
     
-    [self.viewModel bindProperty:STCGetPropertyName(headerName) withReactBlock:^(id value, id arg, id viewModel) {
-        NSLog(@"react block 2!");
+    [self.viewModel bindProperty:STCGetPropertyName(headerName)
+                  withReactBlock:^(id value, id arg, id viewModel) {
+        NSLog(@"headerName react block 2!");
     }];
     
-    [self.viewModel bindProperty:STCGetPropertyName(uploading) withReactBlock:^(id value, id arg,id viewModel) {
+    [self.viewModel bindProperty:STCGetPropertyName(uploading)
+                  withReactBlock:^(id value, id arg,id viewModel) {
+        
         if (self.viewModel.uploading) {
             if (self.alert) {
                 [self.alert dismissViewControllerAnimated:NO completion:nil];
@@ -121,11 +113,13 @@
         
     }];
     
-    [self.viewModel bindProperty:STCGetPropertyName(selectedRow) withReactBlock:^(id value, id target, id viewModel) {
+    [self.viewModel bindProperty:STCGetPropertyName(selectedRow)
+                  withReactBlock:^(id value, id target, id viewModel) {
         if (self.alert) {
             [self.alert dismissViewControllerAnimated:NO completion:nil];
         }
-        self.alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"click button, index: %@", value] preferredStyle:UIAlertControllerStyleAlert];
+        self.alert = [UIAlertController alertControllerWithTitle:nil
+                                                         message:[NSString stringWithFormat:@"click button, index: %@", value] preferredStyle:UIAlertControllerStyleAlert];
         [self presentViewController:self.alert animated:YES completion:^{
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self.alert dismissViewControllerAnimated:YES completion:nil];
@@ -133,81 +127,87 @@
         }];
     }];
     
-    [self.viewModel bindProperty:STCGetPropertyName(tableDataSources) withReactBlock:^(id value, id target,id viewModel) {
+    [self.viewModel bindProperty:STCGetPropertyName(tableDataSources)
+                  withReactBlock:^(id value, id target,id viewModel) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
     }];
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.viewModel.tableDataSources.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    MasterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"reuseIdentifier" forIndexPath:indexPath];
-    if (!cell) {
-        cell = [[MasterTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"reuseIdentifier"];
-    }
-    cell.model = self.viewModel.tableDataSources[indexPath.row];
-    [cell.button addTarget:self.viewModel action:[self.viewModel bindProperty:STCGetPropertyName(cellButtonTag) withActionBlock:^(id  _Nonnull value, id target,__kindof STCBaseViewModel * _Nonnull viewModel) {
-        NSLog(@"%@", value);
-        UIButton * button = (UIButton *)target;
-        self.viewModel.selectedRow = button.tag;
-    }] forControlEvents:UIControlEventTouchUpInside];
-    cell.button.tag = indexPath.row;
     
-    return cell;
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 80;
-}
-
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+    
+    self.tableView.dataSource = (id <UITableViewDataSource>)
+    [[[[[self.viewModel updateCurrentProtocol:STCGetProtocolName(UITableViewDataSource)]    bindProtocolEvent:STCGetSeletorName(tableView:numberOfRowsInSection:)
+           withEventBlock:^id _Nullable(NSArray *  _Nonnull arg, NSString * _Nonnull selName) {
         
-        [self.viewModel removeWithIndexPath:indexPath];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        return @(self.viewModel.tableDataSources.count);
         
-        if (self.alert) {
-            [self.alert dismissViewControllerAnimated:NO completion:nil];
+    }] bindProtocolEvent:STCGetSeletorName(tableView:cellForRowAtIndexPath:)
+          withEventBlock:^id _Nullable(NSArray * _Nonnull arg, NSString * _Nonnull selName) {
+        
+        UITableView *tableView = arg[0];
+        NSIndexPath *indexPath = arg[1];
+        MasterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"reuseIdentifier" forIndexPath:indexPath];
+        if (!cell) {
+            cell = [[MasterTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"reuseIdentifier"];
         }
-        self.alert = [UIAlertController alertControllerWithTitle:nil message:@"finish delete cell"
-                                     preferredStyle:UIAlertControllerStyleAlert];
-        [self presentViewController:self.alert animated:YES completion:^{
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.alert dismissViewControllerAnimated:YES completion:^{
-                    [self.viewModel updateIndexs];
-                }];
-            });
-        }];
-
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }
+        cell.model = self.viewModel.tableDataSources[indexPath.row];
+        [cell.button addTarget:self.viewModel
+                        action:[self.viewModel bindProperty:STCNoStateProperty
+                                            withActionBlock:^(id  _Nonnull value, id target,__kindof STCBaseViewModel * _Nonnull viewModel) {
+            NSLog(@"%@", value);
+            UIButton * button = (UIButton *)target;
+            self.viewModel.selectedRow = button.tag;
+        }] forControlEvents:UIControlEventTouchUpInside];
+        cell.button.tag = indexPath.row;
+        return cell;
+        
+    }] bindProtocolEvent:STCGetSeletorName(tableView:commitEditingStyle:forRowAtIndexPath:)
+          withEventBlock:^id _Nullable(NSArray * _Nonnull arg, NSString * _Nonnull selName) {
+        
+        UITableView *tableView = arg[0];
+        UITableViewCellEditingStyle editingStyle = [arg[1] integerValue];
+        NSIndexPath *indexPath = arg[2];
+        
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+             // Delete the row from the data source
+             [self.viewModel removeDataWithIndexPath:indexPath];
+             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+             
+             if (self.alert) {
+                 [self.alert dismissViewControllerAnimated:NO completion:nil];
+             }
+             self.alert = [UIAlertController alertControllerWithTitle:nil message:@"finish delete cell"
+                                          preferredStyle:UIAlertControllerStyleAlert];
+             [self presentViewController:self.alert animated:YES completion:^{
+                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                     [self.alert dismissViewControllerAnimated:YES completion:^{
+                         [self.viewModel updateIndexs];
+                     }];
+                 });
+             }];
+         } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+         }
+        return nil;
+    }] bindProtocolEvent:STCGetSeletorName(tableView:canEditRowAtIndexPath:)
+          withEventBlock:^id _Nullable(NSArray * _Nonnull arg, NSString * _Nonnull selName) {
+         return @YES;
+    }];
+    
+    self.tableView.delegate = (id <UITableViewDelegate>)
+    [[[self.viewModel updateCurrentProtocol:STCGetProtocolName(UITableViewDelegate)] bindProtocolEvent:STCGetSeletorName(tableView:didSelectRowAtIndexPath:)
+           withEventBlock:^id _Nullable(NSArray * _Nonnull arg, NSString * _Nonnull selName) {
+        
+        NSIndexPath *indexPath = arg[1];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        return nil;
+        
+    }] bindProtocolEvent:STCGetSeletorName(tableView:heightForRowAtIndexPath:)
+          withEventBlock:^id _Nullable(NSArray * _Nonnull arg, NSString * _Nonnull selName) {
+        
+        return @80;
+        
+    }];
 }
 
 #pragma mark - ViewModel

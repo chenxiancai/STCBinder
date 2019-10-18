@@ -15,10 +15,11 @@
 @property (nonatomic, strong) NSString *headerName;
 @property (nonatomic, assign) BOOL uploading;
 @property (nonatomic, assign) NSInteger selectedRow;
-@property (nonatomic, assign) NSInteger cellButtonTag;
+@property (nonatomic, strong) NSString *actionName;
+@property (nonatomic, strong) NSString *alertMessage;
 
 - (void)fetchDataSources;
 - (void)updateIndexs;
-- (void)removeWithIndexPath:(NSIndexPath *)indexPath;
+- (void)removeDataWithIndexPath:(NSIndexPath *)indexPath;
 
 @end
