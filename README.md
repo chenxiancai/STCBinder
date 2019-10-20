@@ -6,6 +6,6 @@ If you want to decouple you business logic in UI, if you want a lightweight arch
 pod "STCBinder"
 ```
 
-### class diagram
+### framework
 
 ![image](https://github.com/chenxiancai/STCBinder/raw/master/class-diagram.png)
